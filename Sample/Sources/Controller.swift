@@ -1,5 +1,5 @@
 //
-//  DummyDelegate.swift
+//  Controller.swift
 //  RowsView
 //
 //  Created by Konstantin Pavlikhin on 30.08.16.
@@ -88,7 +88,7 @@ class PeerCell: RowsViewCell
 
 // * * *.
 
-class DummyDelegate: NSObject, RowsViewDataSource, RowsViewDelegate
+class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 {
   @IBOutlet var window: NSWindow!
 

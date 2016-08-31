@@ -13,6 +13,27 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customObject id="dmk-vJ-KN2" userLabel="Controller" customClass="Controller" customModule="RowsView" customModuleProvider="target">
+            <connections>
+                <outlet property="inserIndexTextField" destination="l2G-G2-OpQ" id="Vuh-DY-Usr"/>
+                <outlet property="insertAnimatedCheckbox" destination="Fdg-Jz-sRQ" id="LFr-HM-S8e"/>
+                <outlet property="insertButton" destination="8jD-xA-Z5k" id="TZ4-af-03T"/>
+                <outlet property="insertNameTextField" destination="NIT-xZ-LwX" id="bJp-jl-guY"/>
+                <outlet property="insertRowPopupButton" destination="mIa-Go-Vme" id="x4j-7q-OxS"/>
+                <outlet property="inspector" destination="s3E-Gd-e3T" id="xa5-MA-een"/>
+                <outlet property="moveAnimatedCheckbox" destination="g3G-CF-7Lu" id="Qpd-yF-cBM"/>
+                <outlet property="moveButton" destination="JA7-vk-B17" id="lrM-Ql-OG2"/>
+                <outlet property="moveFromIndexTextField" destination="XhJ-7Q-0BY" id="Fcg-xy-xai"/>
+                <outlet property="moveFromRowPopupButton" destination="xlQ-wf-Y3Y" id="TiN-5d-iUT"/>
+                <outlet property="moveToIndexTextField" destination="V0d-OK-COX" id="Nm3-Li-7wK"/>
+                <outlet property="moveToRowPopupButton" destination="1hg-XQ-sOf" id="15h-tg-pY6"/>
+                <outlet property="removeAnimatedCheckbox" destination="pMK-Je-Ldi" id="pPC-KW-hUr"/>
+                <outlet property="removeButton" destination="n2t-tp-5m6" id="1PK-YY-EgD"/>
+                <outlet property="removeIndexTextField" destination="4CF-zN-fmL" id="f8u-e9-Mr1"/>
+                <outlet property="removeRowPopupButton" destination="HvI-cq-Zlt" id="cVp-K3-vbD"/>
+                <outlet property="window" destination="QvC-M9-y7g" id="Bc8-pJ-YfF"/>
+            </connections>
+        </customObject>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="RowsView" customModuleProvider="target">
             <connections>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
@@ -679,27 +700,6 @@
             </view>
             <point key="canvasLocation" x="1068" y="462"/>
         </window>
-        <customObject id="dmk-vJ-KN2" userLabel="DummyDelegate" customClass="DummyDelegate" customModule="RowsView" customModuleProvider="target">
-            <connections>
-                <outlet property="inserIndexTextField" destination="l2G-G2-OpQ" id="Vuh-DY-Usr"/>
-                <outlet property="insertAnimatedCheckbox" destination="Fdg-Jz-sRQ" id="LFr-HM-S8e"/>
-                <outlet property="insertButton" destination="8jD-xA-Z5k" id="TZ4-af-03T"/>
-                <outlet property="insertNameTextField" destination="NIT-xZ-LwX" id="bJp-jl-guY"/>
-                <outlet property="insertRowPopupButton" destination="mIa-Go-Vme" id="x4j-7q-OxS"/>
-                <outlet property="inspector" destination="s3E-Gd-e3T" id="xa5-MA-een"/>
-                <outlet property="moveAnimatedCheckbox" destination="g3G-CF-7Lu" id="Qpd-yF-cBM"/>
-                <outlet property="moveButton" destination="JA7-vk-B17" id="lrM-Ql-OG2"/>
-                <outlet property="moveFromIndexTextField" destination="XhJ-7Q-0BY" id="Fcg-xy-xai"/>
-                <outlet property="moveFromRowPopupButton" destination="xlQ-wf-Y3Y" id="TiN-5d-iUT"/>
-                <outlet property="moveToIndexTextField" destination="V0d-OK-COX" id="Nm3-Li-7wK"/>
-                <outlet property="moveToRowPopupButton" destination="1hg-XQ-sOf" id="15h-tg-pY6"/>
-                <outlet property="removeAnimatedCheckbox" destination="pMK-Je-Ldi" id="pPC-KW-hUr"/>
-                <outlet property="removeButton" destination="n2t-tp-5m6" id="1PK-YY-EgD"/>
-                <outlet property="removeIndexTextField" destination="4CF-zN-fmL" id="f8u-e9-Mr1"/>
-                <outlet property="removeRowPopupButton" destination="HvI-cq-Zlt" id="cVp-K3-vbD"/>
-                <outlet property="window" destination="QvC-M9-y7g" id="Bc8-pJ-YfF"/>
-            </connections>
-        </customObject>
         <window title="Inspector" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="" animationBehavior="default" id="s3E-Gd-e3T" userLabel="Inspector" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
