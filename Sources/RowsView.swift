@@ -635,7 +635,6 @@ public class RowsView: NSView
     return backingAlignedRect(possiblyFractionalRect, options: .AlignAllEdgesNearest)
   }
 
-  // TODO: make it dependant on bounds size.
   private func margins(forRow row: RowsViewRow) -> NSSize
   {
     switch row
@@ -650,7 +649,6 @@ public class RowsView: NSView
     }
   }
 
-  // TODO: make it dependant on bounds size.
   private func gapWidth(forRow row: RowsViewRow) -> CGFloat
   {
     switch row
@@ -659,7 +657,7 @@ public class RowsView: NSView
         return 0
 
       case .Bottom:
-        return 20
+        return bounds.width * 0.05
     }
   }
 
