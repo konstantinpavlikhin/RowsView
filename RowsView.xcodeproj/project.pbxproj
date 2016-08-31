@@ -10,6 +10,7 @@
 		B577939B1D77270400F92D7E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B577939A1D77270400F92D7E /* AppDelegate.swift */; };
 		B577939D1D77270400F92D7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B577939C1D77270400F92D7E /* Assets.xcassets */; };
 		B57793A01D77270400F92D7E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B577939E1D77270400F92D7E /* MainMenu.xib */; };
+		B57793AA1D77297200F92D7E /* PeersLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57793A91D77297200F92D7E /* PeersLayoutView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,6 +19,7 @@
 		B577939C1D77270400F92D7E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B577939F1D77270400F92D7E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		B57793A11D77270400F92D7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B57793A91D77297200F92D7E /* PeersLayoutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeersLayoutView.swift; path = Sources/PeersLayoutView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +36,7 @@
 		B577938E1D77270400F92D7E = {
 			isa = PBXGroup;
 			children = (
+				B57793A91D77297200F92D7E /* PeersLayoutView.swift */,
 				B57793991D77270400F92D7E /* RowsView */,
 				B57793981D77270400F92D7E /* Products */,
 			);
@@ -128,6 +131,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B57793AA1D77297200F92D7E /* PeersLayoutView.swift in Sources */,
 				B577939B1D77270400F92D7E /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
