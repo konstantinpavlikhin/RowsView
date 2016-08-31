@@ -22,7 +22,7 @@ public enum RowsViewRow
   }
 }
 
-// * * *.
+// MARK: - Coordinate
 
 public typealias Coordinate = (index: Int, inRow: RowsViewRow)
 
@@ -50,8 +50,6 @@ public protocol RowsViewDelegate
 }
 
 // MARK: - RowsView
-
-// TODO: множественные апдейты beginUpdates/endUpdates?
 
 public class RowsView: NSView
 {
