@@ -276,43 +276,6 @@ class DummyDelegate: NSObject, RowsViewDataSource, RowsViewDelegate
     return rowToItems[coordinate.row]![coordinate.index]
   }
 
-  // Включается enlarged-режим. Айтемы из верхнего ряда будут перемещены в начало нижнего ряда -> [Int: индексы в верхнем ряду].
-  func willEnterEnlargedModeInRowsView(rowsView rowsView: RowsView, forItemAtCoordinate coordinate: Coordinate, topRowItemsIndicesToDepose indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
-  {
-    // Nothing to do.
-  }
-
-  func didEnterEnlargedModeInRowsView(rowsView rowsView: RowsView, forItemAtCoordinate coordinate: Coordinate, deposedTopRowItemsIndices indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
-  {
-    for index in indices.reverse()
-    {
-      let deposedPeer = rowToItems[.Top]!.removeAtIndex(index)
-
-      rowToItems[.Bottom]!.insert(deposedPeer, atIndex: 0)
-    }
-  }
-
-  // Enlarged-режим выключен. В верхнем ряду освобождается место. Что переместить туда из нижнего ряда? (индексы айтемов в нижнем ряду: до уменьшаемого, индексы айтемов в нижнем ряду: после уменьшаемого).
-  func willExitEnlargedModeInRowsView(rowsView rowsView: RowsView) -> (bottomRowItemsToPutBefore: [Int]?, bottomRowItemsToPutAfter: [Int]?)
-  {
-    // Перестроить модель.
-    let indices = [0, 1]
-
-    for index in indices
-    {
-      let removedElement = rowToItems[.Bottom]!.removeAtIndex(index)
-
-      rowToItems[.Top]!.append(removedElement)
-    }
-
-    return (nil, indices)
-  }
-
-  func didExitEnlargedModeInRowsView(rowsView rowsView: RowsView)
-  {
-    // Nothing to do.
-  }
-
   // MARK: - RowsViewDelegate Protocol Implementation
 
   func cellForItemInRowsView(rowsView rowsView: RowsView, atCoordinate coordinate: Coordinate) -> RowsViewCell
