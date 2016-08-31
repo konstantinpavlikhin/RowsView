@@ -555,10 +555,31 @@ public class RowsView: NSView
     }
   }
 
-  // Дропает ячейку и запрашивает замену у дата сурса.
-  public func reAcquireCellForItem(atCoordinate coordinate: Coordinate)
+  // Дропает ячейки и запрашивает замену у делегата.
+  public func reacquireCellsForItems(atCoordinates coordinates: [Coordinate])
   {
-    // TODO: !!!
+    let coordinatesSortedByDescendingIndices = coordinates.sort { (coordinateA, coordinateB) -> Bool in
+      return coordinateA.index > coordinateB.index
+    }
+
+    for coordinate in coordinatesSortedByDescendingIndices
+    {
+      let ejectedCell = rowToCells[coordinate.inRow]!.removeAtIndex(coordinate.index)
+
+      let existingFrame = ejectedCell.frame
+
+      ejectedCell.removeFromSuperview()
+
+      let spareCell = delegate!.cellForItemInRowsView(rowsView: self, atCoordinate: coordinate)
+
+      rowToCells[coordinate.inRow]!.insert(spareCell, atIndex: coordinate.index)
+
+      spareCell.objectValue = rowToItems[coordinate.inRow]![coordinate.index]
+
+      addSubview(spareCell)
+
+      spareCell.frame = existingFrame
+    }
   }
 
   // MARK: - Private Methods
