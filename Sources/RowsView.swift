@@ -40,16 +40,6 @@ public protocol RowsViewDataSource
   func numberOfItemsForRowsView(rowsView rowsView: RowsView, inRow row: RowsViewRow) -> Int
 
   func itemForRowsView(rowsView rowsView: RowsView, atCoordinate coordinate: Coordinate) -> AnyObject
-
-  // Включается enlarged-режим. Айтемы из верхнего ряда будут перемещены в начало нижнего ряда -> [Int: индексы в верхнем ряду].
-  func willEnterEnlargedModeInRowsView(rowsView rowsView: RowsView, forItemAtCoordinate coordinate: Coordinate, topRowItemsIndicesToDepose indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
-
-  func didEnterEnlargedModeInRowsView(rowsView rowsView: RowsView, forItemAtCoordinate coordinate: Coordinate, deposedTopRowItemsIndices indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
-
-  // Enlarged-режим выключен. В верхнем ряду освобождается место. Что переместить туда из нижнего ряда? (индексы айтемов в нижнем ряду: до уменьшаемого, индексы айтемов в нижнем ряду: после уменьшаемого).
-  func willExitEnlargedModeInRowsView(rowsView rowsView: RowsView) -> (bottomRowItemsToPutBefore: [Int]?, bottomRowItemsToPutAfter: [Int]?)
-
-  func didExitEnlargedModeInRowsView(rowsView rowsView: RowsView)
 }
 
 // * * *.
@@ -567,18 +557,6 @@ public class RowsView: NSView
 
   // Дропает ячейку и запрашивает замену у дата сурса.
   public func reAcquireCellForItem(atCoordinate coordinate: Coordinate)
-  {
-    // TODO: !!!
-  }
-
-  // Увеличивает элемент до размеров всего верхнего ряда.
-  public func enlargeItem(atIndex index: Int)
-  {
-    // TODO: !!!
-  }
-
-  // Если мы в enlarged-режиме: выходит из него; верхний ряд заполняется ячейками до предела. Иначе — ничего.
-  public func leaveEnlargedMode()
   {
     // TODO: !!!
   }
