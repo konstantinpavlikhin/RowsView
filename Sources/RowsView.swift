@@ -24,7 +24,7 @@ public enum RowsViewRow
 
 // MARK: - Coordinate
 
-public typealias Coordinate = (index: Int, inRow: RowsViewRow)
+public typealias Coordinate = (index: Int, row: RowsViewRow)
 
 // MARK: - RowsViewCell
 
@@ -167,7 +167,7 @@ public class RowsView: NSView
 
   public func item(atCoordinate coordinate: Coordinate) -> AnyObject
   {
-    return rowToItems[coordinate.inRow]![coordinate.index]
+    return rowToItems[coordinate.row]![coordinate.index]
   }
 
   // Вставляет элементы по данным координатам.
@@ -181,7 +181,7 @@ public class RowsView: NSView
     // Элементы могут быть вставлены либо в верхний, либо в нижний ряд.
     for (coordinate, item) in zip(coordinates, items)
     {
-      rowToItems[coordinate.inRow]!.insert(item, atIndex: coordinate.index)
+      rowToItems[coordinate.row]!.insert(item, atIndex: coordinate.index)
     }
 
     // Вычислить, какие ряды зааффекчены и сколько в каждый производится вставок.
@@ -189,13 +189,13 @@ public class RowsView: NSView
 
     for coordinate in coordinates
     {
-      if let insertionsCount = affectedRowsToInsertionsCount[coordinate.inRow]
+      if let insertionsCount = affectedRowsToInsertionsCount[coordinate.row]
       {
-        affectedRowsToInsertionsCount[coordinate.inRow] = insertionsCount + 1
+        affectedRowsToInsertionsCount[coordinate.row] = insertionsCount + 1
       }
       else
       {
-        affectedRowsToInsertionsCount[coordinate.inRow] = 1
+        affectedRowsToInsertionsCount[coordinate.row] = 1
       }
     }
 
@@ -293,7 +293,7 @@ public class RowsView: NSView
 
     for (coordinate, cell) in zippedCoordinatesAndCellsSortedByAscendingIndex
     {
-      rowToCells[coordinate.inRow]!.insert(cell, atIndex: coordinate.index)
+      rowToCells[coordinate.row]!.insert(cell, atIndex: coordinate.index)
 
       addSubview(cell)
     }
@@ -302,7 +302,7 @@ public class RowsView: NSView
 
     for (coordinate, cell) in zippedCoordinatesAndCellsSortedByAscendingIndex
     {
-      cell.frame = rowsToInsertionFrames[coordinate.inRow]![uglyMutableIndex]
+      cell.frame = rowsToInsertionFrames[coordinate.row]![uglyMutableIndex]
 
       uglyMutableIndex += 1
 
@@ -348,10 +348,10 @@ public class RowsView: NSView
     for (atCoordinate, _) in transitionsSortedByDescendingStartingIndices
     {
       // Изъять объекты из кеша модели со старых мест (для каждого ряда).
-      let removedItem = rowToItems[atCoordinate.inRow]!.removeAtIndex(atCoordinate.index)
+      let removedItem = rowToItems[atCoordinate.row]!.removeAtIndex(atCoordinate.index)
 
       // Изъять ячейки со старых рядов.
-      let removedCell = rowToCells[atCoordinate.inRow]!.removeAtIndex(atCoordinate.index)
+      let removedCell = rowToCells[atCoordinate.row]!.removeAtIndex(atCoordinate.index)
 
       itemsAndCells.append((removedItem, removedCell))
     }
@@ -369,10 +369,10 @@ public class RowsView: NSView
       let targetCoordinate = transition.1
 
       // Поместить объекты в кеш модели на новые места (для каждого ряда).
-      rowToItems[targetCoordinate.inRow]!.insert(itemAndCell.0, atIndex: targetCoordinate.index)
+      rowToItems[targetCoordinate.row]!.insert(itemAndCell.0, atIndex: targetCoordinate.index)
 
       // Поместить ячейки в новые ряды.
-      rowToCells[targetCoordinate.inRow]!.insert(itemAndCell.1, atIndex: targetCoordinate.index)
+      rowToCells[targetCoordinate.row]!.insert(itemAndCell.1, atIndex: targetCoordinate.index)
     }
 
     // Рассчитать лейаут для всех ячеек, опционально анимируя изменения.
@@ -380,11 +380,11 @@ public class RowsView: NSView
     var affectedRowsWithPossibleDuplicates: [RowsViewRow] = []
 
     affectedRowsWithPossibleDuplicates.appendContentsOf(atCoordinates.map { (coordinate) -> RowsViewRow in
-      return coordinate.inRow
+      return coordinate.row
     })
 
     affectedRowsWithPossibleDuplicates.appendContentsOf(toCoordinates.map { (coordinate) -> RowsViewRow in
-      return coordinate.inRow
+      return coordinate.row
     })
 
     let uniqueAffectedRows = Set(affectedRowsWithPossibleDuplicates)
@@ -562,7 +562,7 @@ public class RowsView: NSView
 
     for coordinate in coordinatesSortedByDescendingIndices
     {
-      let ejectedCell = rowToCells[coordinate.inRow]!.removeAtIndex(coordinate.index)
+      let ejectedCell = rowToCells[coordinate.row]!.removeAtIndex(coordinate.index)
 
       let existingFrame = ejectedCell.frame
 
@@ -570,9 +570,9 @@ public class RowsView: NSView
 
       let spareCell = delegate!.cellForItemInRowsView(rowsView: self, atCoordinate: coordinate)
 
-      rowToCells[coordinate.inRow]!.insert(spareCell, atIndex: coordinate.index)
+      rowToCells[coordinate.row]!.insert(spareCell, atIndex: coordinate.index)
 
-      spareCell.objectValue = rowToItems[coordinate.inRow]![coordinate.index]
+      spareCell.objectValue = rowToItems[coordinate.row]![coordinate.index]
 
       addSubview(spareCell)
 

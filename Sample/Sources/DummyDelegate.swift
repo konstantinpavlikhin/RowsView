@@ -195,7 +195,7 @@ class DummyDelegate: NSObject, RowsViewDataSource, RowsViewDelegate
 
     // * * *.
 
-    rowsView.insertItems(atCoordinates: [(index: index, inRow: row)], animated: insertAnimatedCheckbox.state == NSOnState)
+    rowsView.insertItems(atCoordinates: [(index: index, row: row)], animated: insertAnimatedCheckbox.state == NSOnState)
   }
 
   @IBAction private func removeItem(sender: AnyObject?)
@@ -210,7 +210,7 @@ class DummyDelegate: NSObject, RowsViewDataSource, RowsViewDelegate
 
     // * * *.
 
-    rowsView.removeItems(atCoordinates: [(index: index, inRow: row)], animated: removeAnimatedCheckbox.state == NSOnState)
+    rowsView.removeItems(atCoordinates: [(index: index, row: row)], animated: removeAnimatedCheckbox.state == NSOnState)
   }
 
   @IBAction private func moveItem(sender: AnyObject?)
@@ -231,7 +231,7 @@ class DummyDelegate: NSObject, RowsViewDataSource, RowsViewDelegate
 
     // * * *.
 
-    rowsView.moveItems(atCoordinates: [(index: startIndex, inRow: startRow)], toCoordinates: [(index: targetIndex, inRow: targetRow)], animated: moveAnimatedCheckbox.state == NSOnState)
+    rowsView.moveItems(atCoordinates: [(index: startIndex, row: startRow)], toCoordinates: [(index: targetIndex, row: targetRow)], animated: moveAnimatedCheckbox.state == NSOnState)
   }
 
   @IBAction private func enlargeFirst(sender: AnyObject?)
@@ -242,9 +242,9 @@ class DummyDelegate: NSObject, RowsViewDataSource, RowsViewDelegate
 
     // * * *.
 
-    let from: [(Coordinate)] = [(index: 1, inRow: .Top), (index: 2, inRow: .Top)]
+    let from: [(Coordinate)] = [(index: 1, row: .Top), (index: 2, row: .Top)]
 
-    let to: [(Coordinate)] = [(index: 0, inRow: .Bottom), (index: 1, inRow: .Bottom)]
+    let to: [(Coordinate)] = [(index: 0, row: .Bottom), (index: 1, row: .Bottom)]
 
     rowsView.moveItems(atCoordinates: from, toCoordinates: to, animated: moveAnimatedCheckbox.state == NSOnState)
   }
@@ -257,9 +257,9 @@ class DummyDelegate: NSObject, RowsViewDataSource, RowsViewDelegate
 
     // * * *.
 
-    let from: [(Coordinate)] = [(index: 0, inRow: .Bottom), (index: 1, inRow: .Bottom)]
+    let from: [(Coordinate)] = [(index: 0, row: .Bottom), (index: 1, row: .Bottom)]
 
-    let to: [(Coordinate)] = [(index: 1, inRow: .Top), (index: 2, inRow: .Top)]
+    let to: [(Coordinate)] = [(index: 1, row: .Top), (index: 2, row: .Top)]
 
     rowsView.moveItems(atCoordinates: from, toCoordinates: to, animated: moveAnimatedCheckbox.state == NSOnState)
   }
@@ -273,7 +273,7 @@ class DummyDelegate: NSObject, RowsViewDataSource, RowsViewDelegate
 
   func itemForRowsView(rowsView rowsView: RowsView, atCoordinate coordinate: Coordinate) -> AnyObject
   {
-    return rowToItems[coordinate.inRow]![coordinate.index]
+    return rowToItems[coordinate.row]![coordinate.index]
   }
 
   // Включается enlarged-режим. Айтемы из верхнего ряда будут перемещены в начало нижнего ряда -> [Int: индексы в верхнем ряду].
