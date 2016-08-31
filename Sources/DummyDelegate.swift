@@ -1,6 +1,6 @@
 //
 //  DummyDelegate.swift
-//  CAFun
+//  RowsView
 //
 //  Created by Konstantin Pavlikhin on 30.08.16.
 //  Copyright © 2016 Konstantin Pavlikhin. All rights reserved.
@@ -24,7 +24,7 @@ class Peer
 
 // * * *.
 
-class PeerCell: UsersLayoutViewCell
+class PeerCell: RowsViewCell
 {
   let label: NSTextField
 
@@ -88,11 +88,11 @@ class PeerCell: UsersLayoutViewCell
 
 // * * *.
 
-class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegate
+class DummyDelegate: NSObject, RowsViewDataSource, RowsViewDelegate
 {
   @IBOutlet var window: NSWindow!
 
-  let usersLayoutView = UsersLayoutView(frame: NSZeroRect)
+  let rowsView = RowsView(frame: NSZeroRect)
 
   // * * *.
 
@@ -135,7 +135,7 @@ class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegat
 
   var mePeer: Peer = Peer(name: "Me")
 
-  private var rowToItems: [UsersLayoutViewRow: [Peer]] = [:]
+  private var rowToItems: [RowsViewRow: [Peer]] = [:]
 
   // * * *.
 
@@ -145,7 +145,7 @@ class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegat
 
     // * * *.
 
-    for row in UsersLayoutViewRow.allRows()
+    for row in RowsViewRow.allRows()
     {
       rowToItems[row] = []
     }
@@ -156,25 +156,25 @@ class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegat
 
     // * * *.
 
-    usersLayoutView.dataSource = self
+    rowsView.dataSource = self
 
-    usersLayoutView.delegate = self
-
-    // * * *.
-
-    usersLayoutView.translatesAutoresizingMaskIntoConstraints = false
-
-    window.contentView?.addSubview(usersLayoutView)
-
-    let views = ["usersLayoutView": usersLayoutView]
-
-    window.contentView?.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[usersLayoutView]|", options: .DirectionLeadingToTrailing, metrics: nil, views: views))
-
-    window.contentView?.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[usersLayoutView]|", options: .DirectionLeadingToTrailing, metrics: nil, views: views))
+    rowsView.delegate = self
 
     // * * *.
 
-    usersLayoutView.reloadData()
+    rowsView.translatesAutoresizingMaskIntoConstraints = false
+
+    window.contentView?.addSubview(rowsView)
+
+    let views = ["rowsView": rowsView]
+
+    window.contentView?.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[rowsView]|", options: .DirectionLeadingToTrailing, metrics: nil, views: views))
+
+    window.contentView?.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[rowsView]|", options: .DirectionLeadingToTrailing, metrics: nil, views: views))
+
+    // * * *.
+
+    rowsView.reloadData()
   }
 
   // MARK: - Interface Callbacks
@@ -187,7 +187,7 @@ class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegat
 
     let index = inserIndexTextField.integerValue
 
-    let row = (insertRowPopupButton.indexOfSelectedItem == 0 ? UsersLayoutViewRow.Top : UsersLayoutViewRow.Bottom)
+    let row = (insertRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.Top : RowsViewRow.Bottom)
 
     // * * *.
 
@@ -195,14 +195,14 @@ class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegat
 
     // * * *.
 
-    usersLayoutView.insertItems(atCoordinates: [(index: index, inRow: row)], animated: insertAnimatedCheckbox.state == NSOnState)
+    rowsView.insertItems(atCoordinates: [(index: index, inRow: row)], animated: insertAnimatedCheckbox.state == NSOnState)
   }
 
   @IBAction private func removeItem(sender: AnyObject?)
   {
     let index = removeIndexTextField.integerValue
 
-    let row = (removeRowPopupButton.indexOfSelectedItem == 0 ? UsersLayoutViewRow.Top : UsersLayoutViewRow.Bottom)
+    let row = (removeRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.Top : RowsViewRow.Bottom)
 
     // * * *.
 
@@ -210,20 +210,20 @@ class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegat
 
     // * * *.
 
-    usersLayoutView.removeItems(atCoordinates: [(index: index, inRow: row)], animated: removeAnimatedCheckbox.state == NSOnState)
+    rowsView.removeItems(atCoordinates: [(index: index, inRow: row)], animated: removeAnimatedCheckbox.state == NSOnState)
   }
 
   @IBAction private func moveItem(sender: AnyObject?)
   {
     let startIndex = moveFromIndexTextField.integerValue
 
-    let startRow = (moveFromRowPopupButton.indexOfSelectedItem == 0 ? UsersLayoutViewRow.Top : UsersLayoutViewRow.Bottom)
+    let startRow = (moveFromRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.Top : RowsViewRow.Bottom)
 
     // * * *.
 
     let targetIndex = moveToIndexTextField.integerValue
 
-    let targetRow = (moveToRowPopupButton.indexOfSelectedItem == 0 ? UsersLayoutViewRow.Top : UsersLayoutViewRow.Bottom)
+    let targetRow = (moveToRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.Top : RowsViewRow.Bottom)
 
     // * * *.
 
@@ -231,7 +231,7 @@ class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegat
 
     // * * *.
 
-    usersLayoutView.moveItems(atCoordinates: [(index: startIndex, inRow: startRow)], toCoordinates: [(index: targetIndex, inRow: targetRow)], animated: moveAnimatedCheckbox.state == NSOnState)
+    rowsView.moveItems(atCoordinates: [(index: startIndex, inRow: startRow)], toCoordinates: [(index: targetIndex, inRow: targetRow)], animated: moveAnimatedCheckbox.state == NSOnState)
   }
 
   @IBAction private func enlargeFirst(sender: AnyObject?)
@@ -246,7 +246,7 @@ class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegat
 
     let to: [(Coordinate)] = [(index: 0, inRow: .Bottom), (index: 1, inRow: .Bottom)]
 
-    usersLayoutView.moveItems(atCoordinates: from, toCoordinates: to, animated: moveAnimatedCheckbox.state == NSOnState)
+    rowsView.moveItems(atCoordinates: from, toCoordinates: to, animated: moveAnimatedCheckbox.state == NSOnState)
   }
 
   @IBAction private func collapseFirst(sender: AnyObject?)
@@ -261,28 +261,28 @@ class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegat
 
     let to: [(Coordinate)] = [(index: 1, inRow: .Top), (index: 2, inRow: .Top)]
 
-    usersLayoutView.moveItems(atCoordinates: from, toCoordinates: to, animated: moveAnimatedCheckbox.state == NSOnState)
+    rowsView.moveItems(atCoordinates: from, toCoordinates: to, animated: moveAnimatedCheckbox.state == NSOnState)
   }
 
-  // MARK: - UsersLayoutViewDataSource Protocol Implementation
+  // MARK: - RowsViewDataSource Protocol Implementation
 
-  func numberOfItemsForUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView, inRow row: UsersLayoutViewRow) -> Int
+  func numberOfItemsForRowsView(rowsView rowsView: RowsView, inRow row: RowsViewRow) -> Int
   {
     return rowToItems[row]!.count
   }
 
-  func itemForUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView, atCoordinate coordinate: Coordinate) -> AnyObject
+  func itemForRowsView(rowsView rowsView: RowsView, atCoordinate coordinate: Coordinate) -> AnyObject
   {
     return rowToItems[coordinate.inRow]![coordinate.index]
   }
 
   // Включается enlarged-режим. Айтемы из верхнего ряда будут перемещены в начало нижнего ряда -> [Int: индексы в верхнем ряду].
-  func willEnterEnlargedModeInUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView, forItemAtCoordinate coordinate: Coordinate, topRowItemsIndicesToDepose indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
+  func willEnterEnlargedModeInRowsView(rowsView rowsView: RowsView, forItemAtCoordinate coordinate: Coordinate, topRowItemsIndicesToDepose indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
   {
     // Nothing to do.
   }
 
-  func didEnterEnlargedModeInUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView, forItemAtCoordinate coordinate: Coordinate, deposedTopRowItemsIndices indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
+  func didEnterEnlargedModeInRowsView(rowsView rowsView: RowsView, forItemAtCoordinate coordinate: Coordinate, deposedTopRowItemsIndices indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
   {
     for index in indices.reverse()
     {
@@ -293,7 +293,7 @@ class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegat
   }
 
   // Enlarged-режим выключен. В верхнем ряду освобождается место. Что переместить туда из нижнего ряда? (индексы айтемов в нижнем ряду: до уменьшаемого, индексы айтемов в нижнем ряду: после уменьшаемого).
-  func willExitEnlargedModeInUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView) -> (bottomRowItemsToPutBefore: [Int]?, bottomRowItemsToPutAfter: [Int]?)
+  func willExitEnlargedModeInRowsView(rowsView rowsView: RowsView) -> (bottomRowItemsToPutBefore: [Int]?, bottomRowItemsToPutAfter: [Int]?)
   {
     // Перестроить модель.
     let indices = [0, 1]
@@ -308,14 +308,14 @@ class DummyDelegate: NSObject, UsersLayoutViewDataSource, UsersLayoutViewDelegat
     return (nil, indices)
   }
 
-  func didExitEnlargedModeInUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView)
+  func didExitEnlargedModeInRowsView(rowsView rowsView: RowsView)
   {
     // Nothing to do.
   }
 
-  // MARK: - UsersLayoutViewDelegate Protocol Implementation
+  // MARK: - RowsViewDelegate Protocol Implementation
 
-  func cellForItemInUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView, atCoordinate coordinate: Coordinate) -> UsersLayoutViewCell
+  func cellForItemInRowsView(rowsView rowsView: RowsView, atCoordinate coordinate: Coordinate) -> RowsViewCell
   {
     return PeerCell(frame: NSZeroRect)
   }

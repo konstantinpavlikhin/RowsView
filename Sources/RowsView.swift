@@ -1,6 +1,6 @@
 //
-//  UsersLayoutView.swift
-//  CAFun
+//  RowsView.swift
+//  RowsView
 //
 //  Created by Konstantin Pavlikhin on 26.08.16.
 //  Copyright © 2016 Konstantin Pavlikhin. All rights reserved.
@@ -8,15 +8,15 @@
 
 import Cocoa
 
-// MARK: - UsersLayoutViewRow
+// MARK: - RowsViewRow
 
-public enum UsersLayoutViewRow
+public enum RowsViewRow
 {
   case Top
 
   case Bottom
 
-  public static func allRows() -> [UsersLayoutViewRow]
+  public static func allRows() -> [RowsViewRow]
   {
     return [.Top, .Bottom]
   }
@@ -24,62 +24,62 @@ public enum UsersLayoutViewRow
 
 // * * *.
 
-public typealias Coordinate = (index: Int, inRow: UsersLayoutViewRow)
+public typealias Coordinate = (index: Int, inRow: RowsViewRow)
 
-// MARK: - UsersLayoutViewCell
+// MARK: - RowsViewCell
 
-public class UsersLayoutViewCell: NSView
+public class RowsViewCell: NSView
 {
   internal var objectValue: AnyObject?
 }
 
-// MARK: - UsersLayoutViewDataSource
+// MARK: - RowsViewDataSource
 
-public protocol UsersLayoutViewDataSource
+public protocol RowsViewDataSource
 {
-  func numberOfItemsForUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView, inRow row: UsersLayoutViewRow) -> Int
+  func numberOfItemsForRowsView(rowsView rowsView: RowsView, inRow row: RowsViewRow) -> Int
 
-  func itemForUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView, atCoordinate coordinate: Coordinate) -> AnyObject
+  func itemForRowsView(rowsView rowsView: RowsView, atCoordinate coordinate: Coordinate) -> AnyObject
 
   // Включается enlarged-режим. Айтемы из верхнего ряда будут перемещены в начало нижнего ряда -> [Int: индексы в верхнем ряду].
-  func willEnterEnlargedModeInUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView, forItemAtCoordinate coordinate: Coordinate, topRowItemsIndicesToDepose indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
+  func willEnterEnlargedModeInRowsView(rowsView rowsView: RowsView, forItemAtCoordinate coordinate: Coordinate, topRowItemsIndicesToDepose indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
 
-  func didEnterEnlargedModeInUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView, forItemAtCoordinate coordinate: Coordinate, deposedTopRowItemsIndices indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
+  func didEnterEnlargedModeInRowsView(rowsView rowsView: RowsView, forItemAtCoordinate coordinate: Coordinate, deposedTopRowItemsIndices indices: [Int]) // Indices of items in top row that were deposed to the beginning of a bottom row.
 
   // Enlarged-режим выключен. В верхнем ряду освобождается место. Что переместить туда из нижнего ряда? (индексы айтемов в нижнем ряду: до уменьшаемого, индексы айтемов в нижнем ряду: после уменьшаемого).
-  func willExitEnlargedModeInUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView) -> (bottomRowItemsToPutBefore: [Int]?, bottomRowItemsToPutAfter: [Int]?)
+  func willExitEnlargedModeInRowsView(rowsView rowsView: RowsView) -> (bottomRowItemsToPutBefore: [Int]?, bottomRowItemsToPutAfter: [Int]?)
 
-  func didExitEnlargedModeInUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView)
+  func didExitEnlargedModeInRowsView(rowsView rowsView: RowsView)
 }
 
 // * * *.
 
-public protocol UsersLayoutViewDelegate
+public protocol RowsViewDelegate
 {
-  func cellForItemInUsersLayoutView(usersLayoutView usersLayoutView: UsersLayoutView, atCoordinate coordinate: Coordinate) -> UsersLayoutViewCell
+  func cellForItemInRowsView(rowsView rowsView: RowsView, atCoordinate coordinate: Coordinate) -> RowsViewCell
 }
 
-// MARK: - UsersLayoutView
+// MARK: - RowsView
 
 // TODO: множественные апдейты beginUpdates/endUpdates?
 
-public class UsersLayoutView: NSView
+public class RowsView: NSView
 {
-  public var dataSource: UsersLayoutViewDataSource? = nil
+  public var dataSource: RowsViewDataSource? = nil
 
-  public var delegate: UsersLayoutViewDelegate? = nil
+  public var delegate: RowsViewDelegate? = nil
 
   // * * *.
 
-  private var rowToItems: [UsersLayoutViewRow: [AnyObject]] = [:]
+  private var rowToItems: [RowsViewRow: [AnyObject]] = [:]
 
-  private var rowToCells: [UsersLayoutViewRow: [UsersLayoutViewCell]] = [:]
+  private var rowToCells: [RowsViewRow: [RowsViewCell]] = [:]
 
   // MARK: - Initialization
 
   override init(frame frameRect: NSRect)
   {
-    for row in UsersLayoutViewRow.allRows()
+    for row in RowsViewRow.allRows()
     {
       rowToItems[row] = []
 
@@ -108,7 +108,7 @@ public class UsersLayoutView: NSView
 
     // * * *.
 
-    for row in UsersLayoutViewRow.allRows()
+    for row in RowsViewRow.allRows()
     {
       let cells = rowToCells[row]!
 
@@ -141,9 +141,9 @@ public class UsersLayoutView: NSView
 
     // * * *.
 
-    for row in UsersLayoutViewRow.allRows()
+    for row in RowsViewRow.allRows()
     {
-      let numberOfItemsInRow = dataSource!.numberOfItemsForUsersLayoutView(usersLayoutView: self, inRow: row)
+      let numberOfItemsInRow = dataSource!.numberOfItemsForRowsView(rowsView: self, inRow: row)
 
       for i in 0..<numberOfItemsInRow
       {
@@ -151,13 +151,13 @@ public class UsersLayoutView: NSView
 
         // * * *.
 
-        let item = dataSource!.itemForUsersLayoutView(usersLayoutView: self, atCoordinate: coordinate)
+        let item = dataSource!.itemForRowsView(rowsView: self, atCoordinate: coordinate)
 
         rowToItems[row]!.append(item)
 
         // * * *.
 
-        let cell = delegate!.cellForItemInUsersLayoutView(usersLayoutView: self, atCoordinate: coordinate)
+        let cell = delegate!.cellForItemInRowsView(rowsView: self, atCoordinate: coordinate)
 
         cell.objectValue = item
 
@@ -172,7 +172,7 @@ public class UsersLayoutView: NSView
     needsLayout = true
   }
 
-  public func numberOfItems(inRow row: UsersLayoutViewRow) -> Int
+  public func numberOfItems(inRow row: RowsViewRow) -> Int
   {
     return rowToItems[row]!.count
   }
@@ -187,7 +187,7 @@ public class UsersLayoutView: NSView
   {
     // Сходить в датасурса и запросить модельные объекты.
     let items = coordinates.map { coordinate -> AnyObject in
-      return dataSource!.itemForUsersLayoutView(usersLayoutView: self, atCoordinate: coordinate)
+      return dataSource!.itemForRowsView(rowsView: self, atCoordinate: coordinate)
     }
 
     // Элементы могут быть вставлены либо в верхний, либо в нижний ряд.
@@ -197,7 +197,7 @@ public class UsersLayoutView: NSView
     }
 
     // Вычислить, какие ряды зааффекчены и сколько в каждый производится вставок.
-    var affectedRowsToInsertionsCount: [UsersLayoutViewRow: Int] = [:]
+    var affectedRowsToInsertionsCount: [RowsViewRow: Int] = [:]
 
     for coordinate in coordinates
     {
@@ -212,15 +212,15 @@ public class UsersLayoutView: NSView
     }
 
     // Закешировать финальные фреймы ячеек.
-    var rowsToFinalFrames: [UsersLayoutViewRow: [NSRect]] = [:]
+    var rowsToFinalFrames: [RowsViewRow: [NSRect]] = [:]
 
     for (row, insertionsCount) in affectedRowsToInsertionsCount
     {
       rowsToFinalFrames[row] = framesForEquallySizedAndSpacedCells(count: (rowToCells[row]!.count + insertionsCount), inRow: row)
     }
 
-    // Смапить координаты в словарь [UsersLayoutViewRow: [Int]], где [Int] — массив индектов вставок в данном ряду.
-    var affectedRowsToInsertionIndices: [UsersLayoutViewRow: [Int]] = [:]
+    // Смапить координаты в словарь [RowsViewRow: [Int]], где [Int] — массив индектов вставок в данном ряду.
+    var affectedRowsToInsertionIndices: [RowsViewRow: [Int]] = [:]
 
     for (index, row) in coordinates
     {
@@ -237,7 +237,7 @@ public class UsersLayoutView: NSView
     }
 
     // Сначала необходимо раздвинуть существующие элементы, чтобы освободить место под вставку.
-    var rowsToInsertionFrames: [UsersLayoutViewRow: [NSRect]] = [:]
+    var rowsToInsertionFrames: [RowsViewRow: [NSRect]] = [:]
 
     for (row, insertionIndices) in affectedRowsToInsertionIndices
     {
@@ -261,7 +261,7 @@ public class UsersLayoutView: NSView
           {
             let currentFrame = self.rowToCells[row]![i].frame
 
-            let animation = UsersLayoutView.animationForMovingCellApart(currentFrame, targetFrame: frames[i])
+            let animation = RowsView.animationForMovingCellApart(currentFrame, targetFrame: frames[i])
 
             self.rowToCells[row]![i].animations = ["frame": animation]
 
@@ -282,8 +282,8 @@ public class UsersLayoutView: NSView
     }
 
     // Сходить в делегата и запросить ячейки.
-    let cells = coordinates.map { (coordinate) -> UsersLayoutViewCell in
-      let cell = delegate!.cellForItemInUsersLayoutView(usersLayoutView: self, atCoordinate: coordinate)
+    let cells = coordinates.map { (coordinate) -> RowsViewCell in
+      let cell = delegate!.cellForItemInRowsView(rowsView: self, atCoordinate: coordinate)
 
       cell.wantsLayer = true
 
@@ -327,7 +327,7 @@ public class UsersLayoutView: NSView
 
           animationContext.allowsImplicitAnimation = false
 
-          let animation = UsersLayoutView.animationForFading(fromAlpha: 0, toAlpha: 1, beginTime: CACurrentMediaTime() + 0.5)
+          let animation = RowsView.animationForFading(fromAlpha: 0, toAlpha: 1, beginTime: CACurrentMediaTime() + 0.5)
 
           cell.animations = ["alphaValue": animation]
 
@@ -355,7 +355,7 @@ public class UsersLayoutView: NSView
 
     // * * *.
 
-    var itemsAndCells: [(AnyObject, UsersLayoutViewCell)] = []
+    var itemsAndCells: [(AnyObject, RowsViewCell)] = []
 
     for (atCoordinate, _) in transitionsSortedByDescendingStartingIndices
     {
@@ -389,19 +389,19 @@ public class UsersLayoutView: NSView
 
     // Рассчитать лейаут для всех ячеек, опционально анимируя изменения.
 
-    var affectedRowsWithPossibleDuplicates: [UsersLayoutViewRow] = []
+    var affectedRowsWithPossibleDuplicates: [RowsViewRow] = []
 
-    affectedRowsWithPossibleDuplicates.appendContentsOf(atCoordinates.map { (coordinate) -> UsersLayoutViewRow in
+    affectedRowsWithPossibleDuplicates.appendContentsOf(atCoordinates.map { (coordinate) -> RowsViewRow in
       return coordinate.inRow
     })
 
-    affectedRowsWithPossibleDuplicates.appendContentsOf(toCoordinates.map { (coordinate) -> UsersLayoutViewRow in
+    affectedRowsWithPossibleDuplicates.appendContentsOf(toCoordinates.map { (coordinate) -> RowsViewRow in
       return coordinate.inRow
     })
 
     let uniqueAffectedRows = Set(affectedRowsWithPossibleDuplicates)
 
-    var rowsToFinalFrames: [UsersLayoutViewRow: [NSRect]] = [:]
+    var rowsToFinalFrames: [RowsViewRow: [NSRect]] = [:]
 
     for row in uniqueAffectedRows
     {
@@ -423,7 +423,7 @@ public class UsersLayoutView: NSView
           {
             let currentFrame = self.rowToCells[row]![i].frame
 
-            let animation = UsersLayoutView.animationForMovingCellApart(currentFrame, targetFrame: rowsToFinalFrames[row]![i])
+            let animation = RowsView.animationForMovingCellApart(currentFrame, targetFrame: rowsToFinalFrames[row]![i])
 
             self.rowToCells[row]![i].animations = ["frame": animation]
 
@@ -447,8 +447,8 @@ public class UsersLayoutView: NSView
   // Убирает элементы по данным индексам.
   public func removeItems(atCoordinates coordinates: [Coordinate], animated: Bool)
   {
-    // Смапить координаты в словарь [UsersLayoutViewRow: [Int]], где [Int] — массив индектов вставок в данном ряду.
-    var affectedRowsToRemovalIndices: [UsersLayoutViewRow: [Int]] = [:]
+    // Смапить координаты в словарь [RowsViewRow: [Int]], где [Int] — массив индектов вставок в данном ряду.
+    var affectedRowsToRemovalIndices: [RowsViewRow: [Int]] = [:]
 
     for (index, row) in coordinates
     {
@@ -471,7 +471,7 @@ public class UsersLayoutView: NSView
     }
 
     // Викинуть ячейки с опциональной анимацией fade-out.
-    let cells = affectedRowsToRemovalIndices.flatMap { (tuple: (UsersLayoutViewRow, [Int])) in
+    let cells = affectedRowsToRemovalIndices.flatMap { (tuple: (RowsViewRow, [Int])) in
       return self.rowToCells[tuple.0]!.remove(atIndices: tuple.1)
     }
 
@@ -480,7 +480,7 @@ public class UsersLayoutView: NSView
     let framesAlterationClosure =
     {
       // Сдвинуть существующие элементы, чтобы занять освободившееся место.
-      var rowsToFinalFrames: [UsersLayoutViewRow: [NSRect]] = [:]
+      var rowsToFinalFrames: [RowsViewRow: [NSRect]] = [:]
 
       for row in affectedRowsToRemovalIndices.keys
       {
@@ -502,7 +502,7 @@ public class UsersLayoutView: NSView
             {
               let currentFrame = self.rowToCells[row]![i].frame
 
-              let animation = UsersLayoutView.animationForMovingCellApart(currentFrame, targetFrame: rowsToFinalFrames[row]![i])
+              let animation = RowsView.animationForMovingCellApart(currentFrame, targetFrame: rowsToFinalFrames[row]![i])
 
               self.rowToCells[row]![i].animations = ["frame": animation]
 
@@ -534,7 +534,7 @@ public class UsersLayoutView: NSView
 
         animationContext.allowsImplicitAnimation = false
 
-        let animation = UsersLayoutView.animationForFading(fromAlpha: 1, toAlpha: 0, beginTime: 0)
+        let animation = RowsView.animationForFading(fromAlpha: 1, toAlpha: 0, beginTime: 0)
 
         for cell in cells
         {
@@ -587,7 +587,7 @@ public class UsersLayoutView: NSView
 
   private func clearState()
   {
-    for row in UsersLayoutViewRow.allRows()
+    for row in RowsViewRow.allRows()
     {
       rowToItems[row]!.removeAll()
 
@@ -606,7 +606,7 @@ public class UsersLayoutView: NSView
 
   private let rowsProportion: CGFloat = 2.0 / 3.0
 
-  private func availableRect(forRow row: UsersLayoutViewRow) -> NSRect
+  private func availableRect(forRow row: RowsViewRow) -> NSRect
   {
     var topRect: NSRect = NSZeroRect
 
@@ -637,7 +637,7 @@ public class UsersLayoutView: NSView
   }
 
   // TODO: make it dependant on bounds size.
-  private func margins(forRow row: UsersLayoutViewRow) -> NSSize
+  private func margins(forRow row: RowsViewRow) -> NSSize
   {
     switch row
     {
@@ -652,7 +652,7 @@ public class UsersLayoutView: NSView
   }
 
   // TODO: make it dependant on bounds size.
-  private func gapWidth(forRow row: UsersLayoutViewRow) -> CGFloat
+  private func gapWidth(forRow row: RowsViewRow) -> CGFloat
   {
     switch row
     {
@@ -664,7 +664,7 @@ public class UsersLayoutView: NSView
     }
   }
 
-  private func cellWidthLimit(forHeight height: CGFloat, inRow row: UsersLayoutViewRow) -> CGFloat?
+  private func cellWidthLimit(forHeight height: CGFloat, inRow row: RowsViewRow) -> CGFloat?
   {
     switch row
     {
@@ -678,7 +678,7 @@ public class UsersLayoutView: NSView
     }
   }
 
-  private func framesForEquallySizedAndSpacedCells(count count: Int, inRow row: UsersLayoutViewRow) -> [NSRect]
+  private func framesForEquallySizedAndSpacedCells(count count: Int, inRow row: RowsViewRow) -> [NSRect]
   {
     assert(count > 0, "U mad? You gave me a zero count!")
 
