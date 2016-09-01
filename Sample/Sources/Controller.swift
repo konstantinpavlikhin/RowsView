@@ -72,14 +72,19 @@ class PeerCell: RowsViewCell
     label.translatesAutoresizingMaskIntoConstraints = false
 
     addSubview(label)
-
-    let views = ["label": label]
-
-    addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[label]|", options: .DirectionLeadingToTrailing, metrics: nil, views: views))
-
-    addConstraint(NSLayoutConstraint(item: label, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 0))
   }
-  
+
+  override func layout()
+  {
+    let x = NSMinX(self.bounds) + (NSWidth(self.bounds) - NSWidth(label.frame)) / 2.0
+
+    let y = NSMinY(self.bounds) + (NSHeight(self.bounds) - NSHeight(label.frame)) / 2.0
+
+    let rect = NSMakeRect(x, y, label.frame.size.width, label.frame.size.height)
+
+    label.frame = backingAlignedRect(rect, options: .AlignAllEdgesNearest)
+  }
+
   required init?(coder: NSCoder)
   {
     fatalError("init(coder:) has not been implemented")
