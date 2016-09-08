@@ -694,7 +694,10 @@ public class RowsView: NSView
 
   private func framesForEquallySizedAndSpacedCells(count count: Int, inRow row: RowsViewRow) -> [NSRect]
   {
-    assert(count > 0, "U mad? You gave me a zero count!")
+    guard count != 0 else
+    {
+      return []
+    }
 
     // * * *.
 
