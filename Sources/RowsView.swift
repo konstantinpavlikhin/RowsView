@@ -658,6 +658,22 @@ public class RowsView: NSView
     return nil
   }
 
+  public func coordinate(forItem item: AnyObject) -> Coordinate?
+  {
+    for row in RowsViewRow.allRows()
+    {
+      for (index, element) in rowToItems[row]!.enumerate()
+      {
+        if element === item
+        {
+          return (row: row, index: index)
+        }
+      }
+    }
+
+    return nil
+  }
+
   // Дропает ячейки и запрашивает замену у делегата.
   public func reacquireCellsForItems(atCoordinates coordinates: [Coordinate])
   {
