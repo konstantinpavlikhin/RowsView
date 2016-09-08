@@ -213,6 +213,16 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
     rowToItems[row]!.removeAtIndex(index)
 
+    if row == .Top
+    {
+      if rowToItems[.Top]!.count == 0
+      {
+        rowToItems[.Top] = rowToItems[.Bottom]
+
+        rowToItems[.Bottom] = []
+      }
+    }
+
     // * * *.
 
     rowsView.removeItems(atCoordinates: [(index: index, row: row)], animated: removeAnimatedCheckbox.state == NSOnState)
@@ -233,6 +243,18 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
     // * * *.
 
     rowToItems[targetRow]!.insert(rowToItems[startRow]!.removeAtIndex(startIndex), atIndex: targetIndex)
+
+    // * * *.
+
+    if targetRow == .Bottom
+    {
+      if rowToItems[.Top]!.count == 0
+      {
+        rowToItems[.Top] = rowToItems[.Bottom]
+
+        rowToItems[.Bottom] = []
+      }
+    }
 
     // * * *.
 

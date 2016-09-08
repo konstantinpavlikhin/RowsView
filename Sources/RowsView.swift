@@ -105,7 +105,7 @@ public class RowsView: NSView
         continue
       }
 
-      let frames = framesForEquallySizedAndSpacedCells(count: cells.count, inRow: row)
+      let frames = framesForEquallySizedAndSpacedCells(count: cells.count, inRow: row, hasBottomRow: rowToCells[.Bottom]!.count > 0)
 
       for i in 0..<cells.count
       {
@@ -178,6 +178,8 @@ public class RowsView: NSView
       return dataSource!.itemForRowsView(rowsView: self, atCoordinate: coordinate)
     }
 
+    let hadBottomRowBeforeInsertionsHappened = rowToItems[.Bottom]!.count > 0
+
     // Элементы могут быть вставлены либо в верхний, либо в нижний ряд.
     for (coordinate, item) in zip(coordinates, items)
     {
@@ -199,12 +201,22 @@ public class RowsView: NSView
       }
     }
 
+    // Если до изменений нижний ряд отсутствовал, но в него производятся вставки...
+    if !hadBottomRowBeforeInsertionsHappened && affectedRowsToInsertionsCount[.Bottom] != nil
+    {
+      if affectedRowsToInsertionsCount[.Top] == nil
+      {
+        // Вставок не было, но нам надо перерассчитать все фреймы в верхнем ряду.
+        affectedRowsToInsertionsCount[.Top] = 0
+      }
+    }
+
     // Закешировать финальные фреймы ячеек.
     var rowsToFinalFrames: [RowsViewRow: [NSRect]] = [:]
 
     for (row, insertionsCount) in affectedRowsToInsertionsCount
     {
-      rowsToFinalFrames[row] = framesForEquallySizedAndSpacedCells(count: (rowToCells[row]!.count + insertionsCount), inRow: row)
+      rowsToFinalFrames[row] = framesForEquallySizedAndSpacedCells(count: (rowToCells[row]!.count + insertionsCount), inRow: row, hasBottomRow: rowToItems[.Bottom]!.count > 0)
     }
 
     // Смапить координаты в словарь [RowsViewRow: [Int]], где [Int] — массив индектов вставок в данном ряду.
@@ -389,11 +401,44 @@ public class RowsView: NSView
 
     let uniqueAffectedRows = Set(affectedRowsWithPossibleDuplicates)
 
+    // * * *.
+
+    var affectedRows: Set<RowsViewRow> = []
+
+    if(rowToItems[.Top]!.count > 0 && rowToItems[.Bottom]!.count > 0)
+    {
+      // Все нормально, дырок нет, ничего делать не надо.
+      affectedRows = uniqueAffectedRows
+    }
+    else if(rowToItems[.Top]!.count == 0 && rowToItems[.Bottom]!.count > 0)
+    {
+      // Верхний ряд полностью пропал, в нижнем есть элементы.
+
+      // Переместить айтемы и ячейки.
+      rowToItems[.Top] = rowToItems[.Bottom]
+
+      rowToItems[.Bottom] = []
+
+      rowToCells[.Top] = rowToCells[.Bottom]
+
+      rowToCells[.Bottom] = []
+
+      // Вернуть заафекченные ряды.
+      affectedRows = [.Top]
+    }
+    else if(rowToItems[.Top]!.count > 0 && rowToItems[.Bottom]!.count == 0)
+    {
+      // В верхнем ряду есть элементы, нижний ряд полностью пропал.
+      affectedRows = [.Top]
+    }
+    
+    // * * *.
+
     var rowsToFinalFrames: [RowsViewRow: [NSRect]] = [:]
 
-    for row in uniqueAffectedRows
+    for row in affectedRows
     {
-      rowsToFinalFrames[row] = framesForEquallySizedAndSpacedCells(count: rowToCells[row]!.count, inRow: row)
+      rowsToFinalFrames[row] = framesForEquallySizedAndSpacedCells(count: rowToCells[row]!.count, inRow: row, hasBottomRow: rowToItems[.Bottom]!.count > 0)
     }
 
     if animated
@@ -405,7 +450,7 @@ public class RowsView: NSView
 
         animationContext.allowsImplicitAnimation = false
 
-        for row in uniqueAffectedRows
+        for row in affectedRows
         {
           for i in 0..<self.rowToCells[row]!.count
           {
@@ -422,7 +467,7 @@ public class RowsView: NSView
     }
     else
     {
-      for row in uniqueAffectedRows
+      for row in affectedRows
       {
         for i in 0..<self.rowToCells[row]!.count
         {
@@ -465,14 +510,46 @@ public class RowsView: NSView
 
     // * * *.
 
+    // Возможно, получились «дырки» в модели.
+    var affectedRows: [RowsViewRow] = []
+
+    if(rowToItems[.Top]!.count > 0 && rowToItems[.Bottom]!.count > 0)
+    {
+      // Все нормально, дырок нет, ничего делать не надо.
+      affectedRows = Array(affectedRowsToRemovalIndices.keys)
+    }
+    else if(rowToItems[.Top]!.count == 0 && rowToItems[.Bottom]!.count > 0)
+    {
+      // Верхний ряд полностью пропал, в нижнем есть элементы.
+
+      // Переместить айтемы и ячейки.
+      rowToItems[.Top] = rowToItems[.Bottom]
+
+      rowToItems[.Bottom] = []
+
+      rowToCells[.Top] = rowToCells[.Bottom]
+
+      rowToCells[.Bottom] = []
+
+      // Вернуть заафекченные ряды.
+      affectedRows = [.Top]
+    }
+    else if(rowToItems[.Top]!.count > 0 && rowToItems[.Bottom]!.count == 0)
+    {
+      // В верхнем ряду есть элементы, нижний ряд полностью пропал.
+      affectedRows = [.Top]
+    }
+
+    // * * *.
+
     let framesAlterationClosure =
     {
       // Сдвинуть существующие элементы, чтобы занять освободившееся место.
       var rowsToFinalFrames: [RowsViewRow: [NSRect]] = [:]
 
-      for row in affectedRowsToRemovalIndices.keys
+      for row in affectedRows
       {
-        rowsToFinalFrames[row] = self.framesForEquallySizedAndSpacedCells(count: self.rowToCells[row]!.count, inRow: row)
+        rowsToFinalFrames[row] = self.framesForEquallySizedAndSpacedCells(count: self.rowToCells[row]!.count, inRow: row, hasBottomRow: self.rowToItems[.Bottom]!.count > 0)
       }
 
       if animated
@@ -484,7 +561,7 @@ public class RowsView: NSView
 
           animationContext.allowsImplicitAnimation = false
 
-          for row in affectedRowsToRemovalIndices.keys
+          for row in affectedRows
           {
             for i in 0..<self.rowToCells[row]!.count
             {
@@ -501,7 +578,7 @@ public class RowsView: NSView
       }
       else
       {
-        for row in affectedRowsToRemovalIndices.keys
+        for row in affectedRows
         {
           for i in 0..<self.rowToCells[row]!.count
           {
@@ -622,8 +699,18 @@ public class RowsView: NSView
 
   private let rowsProportion: CGFloat = 2.0 / 3.0
 
-  private func availableRect(forRow row: RowsViewRow) -> NSRect
+  private func availableRect(forRow row: RowsViewRow, hasBottomRow: Bool) -> NSRect
   {
+    // Рассматриваем специальный случай, когда ряд всего один.
+    if(row == .Top && !hasBottomRow)
+    {
+      let margins = self.margins(forRow: .Top)
+
+      return backingAlignedRect(NSInsetRect(bounds, margins.width, margins.height), options: .AlignAllEdgesNearest)
+    }
+
+    // * * *.
+
     var topRect: NSRect = NSZeroRect
 
     var bottomRect: NSRect = NSZeroRect
@@ -692,7 +779,7 @@ public class RowsView: NSView
     }
   }
 
-  private func framesForEquallySizedAndSpacedCells(count count: Int, inRow row: RowsViewRow) -> [NSRect]
+  private func framesForEquallySizedAndSpacedCells(count count: Int, inRow row: RowsViewRow, hasBottomRow: Bool) -> [NSRect]
   {
     guard count != 0 else
     {
@@ -701,7 +788,7 @@ public class RowsView: NSView
 
     // * * *.
 
-    let availableRect = self.availableRect(forRow: row)
+    let availableRect = self.availableRect(forRow: row, hasBottomRow:  hasBottomRow)
 
     let gapWidth = self.gapWidth(forRow: row)
 
