@@ -37,6 +37,8 @@ public class RowsViewCell: NSView
 
 public protocol RowsViewDataSource
 {
+  func bottomRowForRowsView(rowsView rowsView: RowsView) -> Bool
+
   func numberOfItemsForRowsView(rowsView rowsView: RowsView, inRow row: RowsViewRow) -> Int
 
   func itemForRowsView(rowsView rowsView: RowsView, atCoordinate coordinate: Coordinate) -> AnyObject
@@ -129,7 +131,9 @@ public class RowsView: NSView
 
     // * * *.
 
-    for row in RowsViewRow.allRows()
+    let rowsToQuery: [RowsViewRow] = [.Top] + (dataSource!.bottomRowForRowsView(rowsView: self) ? [.Bottom] : [])
+
+    for row in rowsToQuery
     {
       let numberOfItemsInRow = dataSource!.numberOfItemsForRowsView(rowsView: self, inRow: row)
 

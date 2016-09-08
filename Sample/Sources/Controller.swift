@@ -293,6 +293,18 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
   // MARK: - RowsViewDataSource Protocol Implementation
 
+  func bottomRowForRowsView(rowsView rowsView: RowsView) -> Bool
+  {
+    if let bottomItems = rowToItems[.Bottom]
+    {
+      return bottomItems.count > 0
+    }
+    else
+    {
+      return false
+    }
+  }
+
   func numberOfItemsForRowsView(rowsView rowsView: RowsView, inRow row: RowsViewRow) -> Int
   {
     return rowToItems[row]!.count
