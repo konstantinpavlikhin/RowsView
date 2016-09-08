@@ -178,6 +178,8 @@ public class RowsView: NSView
       return dataSource!.itemForRowsView(rowsView: self, atCoordinate: coordinate)
     }
 
+    let wasEmptyBeforeInsertionsHappened = (rowToItems[.Top]!.count == 0) && (rowToItems[.Bottom]!.count == 0)
+
     let hadBottomRowBeforeInsertionsHappened = rowToItems[.Bottom]!.count > 0
 
     // Элементы могут быть вставлены либо в верхний, либо в нижний ряд.
@@ -246,37 +248,40 @@ public class RowsView: NSView
       rowsToInsertionFrames[row] = rowsToFinalFrames[row]!.remove(atIndices: indicesSortedByAscending)
     }
 
-    if animated
+    if(!wasEmptyBeforeInsertionsHappened)
     {
-      NSAnimationContext.runAnimationGroup({ (animationContext) in
-        animationContext.duration = 0.5
+      if animated
+      {
+        NSAnimationContext.runAnimationGroup({ (animationContext) in
+          animationContext.duration = 0.5
 
-        animationContext.timingFunction = nil
+          animationContext.timingFunction = nil
 
-        animationContext.allowsImplicitAnimation = false
+          animationContext.allowsImplicitAnimation = false
 
+          for (row, frames) in rowsToFinalFrames
+          {
+            for i in 0..<self.rowToCells[row]!.count
+            {
+              let currentFrame = self.rowToCells[row]![i].frame
+
+              let animation = RowsView.animationForMovingCellApart(currentFrame, targetFrame: frames[i])
+
+              self.rowToCells[row]![i].animations = ["frame": animation]
+
+              self.rowToCells[row]![i].animator().frame = frames[i]
+            }
+          }
+        }, completionHandler: nil)
+      }
+      else
+      {
         for (row, frames) in rowsToFinalFrames
         {
           for i in 0..<self.rowToCells[row]!.count
           {
-            let currentFrame = self.rowToCells[row]![i].frame
-
-            let animation = RowsView.animationForMovingCellApart(currentFrame, targetFrame: frames[i])
-
-            self.rowToCells[row]![i].animations = ["frame": animation]
-
-            self.rowToCells[row]![i].animator().frame = frames[i]
+            self.rowToCells[row]![i].frame = frames[i]
           }
-        }
-      }, completionHandler: nil)
-    }
-    else
-    {
-      for (row, frames) in rowsToFinalFrames
-      {
-        for i in 0..<self.rowToCells[row]!.count
-        {
-          self.rowToCells[row]![i].frame = frames[i]
         }
       }
     }
@@ -327,7 +332,7 @@ public class RowsView: NSView
 
           animationContext.allowsImplicitAnimation = false
 
-          let animation = RowsView.animationForFading(fromAlpha: 0, toAlpha: 1, beginTime: CACurrentMediaTime() + 0.5)
+          let animation = RowsView.animationForFading(fromAlpha: 0, toAlpha: 1, beginTime: CACurrentMediaTime() + (wasEmptyBeforeInsertionsHappened ? 0 : 0.5))
 
           cell.animations = ["alphaValue": animation]
 
