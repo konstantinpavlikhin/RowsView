@@ -553,6 +553,25 @@ public class RowsView: NSView
     }
   }
 
+  // Возвращает ячейку, соответствующую item, если таковой объект известен таблице.
+  public func cell(forItem item: AnyObject) -> RowsViewCell?
+  {
+    for row in RowsViewRow.allRows()
+    {
+      let itemsCount = rowToItems[row]!.count
+
+      for i in 0..<itemsCount
+      {
+        if rowToItems[row]![i] === item
+        {
+          return rowToCells[row]![i]
+        }
+      }
+    }
+
+    return nil
+  }
+
   // Дропает ячейки и запрашивает замену у делегата.
   public func reacquireCellsForItems(atCoordinates coordinates: [Coordinate])
   {
