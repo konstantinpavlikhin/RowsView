@@ -42,6 +42,9 @@ public protocol RowsViewDataSource
   func numberOfItemsForRowsView(rowsView rowsView: RowsView, inRow row: RowsViewRow) -> Int
 
   func itemForRowsView(rowsView rowsView: RowsView, atCoordinate coordinate: Coordinate) -> AnyObject
+
+  // Возвращает индексы элементов в нижнем ряду, которые будут перемещены на место исчезнувшего верхнего ряда.
+  func topRowVanishesInRowsView(rowsView rowsView: RowsView) -> [Int]
 }
 
 // * * *.
@@ -423,17 +426,17 @@ public class RowsView: NSView
     {
       // Верхний ряд полностью пропал, в нижнем есть элементы.
 
+      let bottomRowIndices = dataSource!.topRowVanishesInRowsView(rowsView: self)
+
+      assert(bottomRowIndices.count > 0, "topRowVanishesInRowsView(rowsView:) should never return an empty array!")
+
       // Переместить айтемы и ячейки.
-      rowToItems[.Top] = rowToItems[.Bottom]
+      rowToItems[.Top] = rowToItems[.Bottom]!.remove(atIndices: bottomRowIndices)
 
-      rowToItems[.Bottom] = []
-
-      rowToCells[.Top] = rowToCells[.Bottom]
-
-      rowToCells[.Bottom] = []
+      rowToCells[.Top] = rowToCells[.Bottom]!.remove(atIndices: bottomRowIndices)
 
       // Вернуть заафекченные ряды.
-      affectedRows = [.Top]
+      affectedRows = Set([.Top] + (rowToItems[.Bottom]!.count > 0 ? [.Bottom] : []))
     }
     else if(rowToItems[.Top]!.count > 0 && rowToItems[.Bottom]!.count == 0)
     {
@@ -489,7 +492,7 @@ public class RowsView: NSView
   // Убирает элементы по данным индексам.
   public func removeItems(atCoordinates coordinates: [Coordinate], animated: Bool)
   {
-    // Смапить координаты в словарь [RowsViewRow: [Int]], где [Int] — массив индектов вставок в данном ряду.
+    // Смапить координаты в словарь [RowsViewRow: [Int]], где [Int] — массив индексов удалений из соответствующего ряда.
     var affectedRowsToRemovalIndices: [RowsViewRow: [Int]] = [:]
 
     for (index, row) in coordinates
@@ -531,17 +534,17 @@ public class RowsView: NSView
     {
       // Верхний ряд полностью пропал, в нижнем есть элементы.
 
+      let bottomRowIndices = dataSource!.topRowVanishesInRowsView(rowsView: self)
+
+      assert(bottomRowIndices.count > 0, "topRowVanishesInRowsView(rowsView:) should never return an empty array!")
+
       // Переместить айтемы и ячейки.
-      rowToItems[.Top] = rowToItems[.Bottom]
+      rowToItems[.Top] = rowToItems[.Bottom]!.remove(atIndices: bottomRowIndices)
 
-      rowToItems[.Bottom] = []
-
-      rowToCells[.Top] = rowToCells[.Bottom]
-
-      rowToCells[.Bottom] = []
+      rowToCells[.Top] = rowToCells[.Bottom]!.remove(atIndices: bottomRowIndices)
 
       // Вернуть заафекченные ряды.
-      affectedRows = [.Top]
+      affectedRows = [.Top] + (rowToItems[.Bottom]!.count > 0 ? [.Bottom] : [])
     }
     else if(rowToItems[.Top]!.count > 0 && rowToItems[.Bottom]!.count == 0)
     {
