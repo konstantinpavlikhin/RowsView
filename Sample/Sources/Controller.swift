@@ -45,15 +45,15 @@ class PeerCell: RowsViewCell
   {
     label = NSTextField(frame: NSZeroRect)
 
-    label.editable = false
+    label.isEditable = false
 
-    label.bordered = false
+    label.isBordered = false
 
     label.drawsBackground = false
 
-    label.alignment = .Center
+    label.alignment = .center
 
-    label.font = NSFont.systemFontOfSize(24)
+    label.font = NSFont.systemFont(ofSize: 24)
 
     // * * *.
 
@@ -63,7 +63,7 @@ class PeerCell: RowsViewCell
 
     wantsLayer = true
 
-    layer?.backgroundColor = NSColor.redColor().CGColor
+    layer?.backgroundColor = NSColor.red.cgColor
 
     layer?.borderWidth = 1
 
@@ -82,7 +82,7 @@ class PeerCell: RowsViewCell
 
     let rect = NSMakeRect(x, y, label.frame.size.width, label.frame.size.height)
 
-    label.frame = backingAlignedRect(rect, options: .AlignAllEdgesNearest)
+    label.frame = backingAlignedRect(rect, options: .alignAllEdgesNearest)
   }
 
   required init?(coder: NSCoder)
@@ -140,7 +140,7 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
   var mePeer: Peer = Peer(name: "Me")
 
-  private var rowToItems: [RowsViewRow: [Peer]] = [:]
+  fileprivate var rowToItems: [RowsViewRow: [Peer]] = [:]
 
   // * * *.
 
@@ -155,9 +155,9 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
       rowToItems[row] = []
     }
 
-    rowToItems[.Top] = [Peer(name: "1"), Peer(name: "2"), Peer(name: "3")]
+    rowToItems[.top] = [Peer(name: "1"), Peer(name: "2"), Peer(name: "3")]
 
-    rowToItems[.Bottom] = [mePeer]
+    rowToItems[.bottom] = [mePeer]
 
     // * * *.
 
@@ -173,9 +173,9 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
     let views = ["rowsView": rowsView]
 
-    window.contentView?.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[rowsView]|", options: .DirectionLeadingToTrailing, metrics: nil, views: views))
+    window.contentView?.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[rowsView]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
 
-    window.contentView?.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[rowsView]|", options: .DirectionLeadingToTrailing, metrics: nil, views: views))
+    window.contentView?.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[rowsView]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
 
     // * * *.
 
@@ -184,7 +184,7 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
   // MARK: - Interface Callbacks
 
-  @IBAction private func insertItem(sender: AnyObject?)
+  @IBAction fileprivate func insertItem(_ sender: AnyObject?)
   {
     let peer = Peer(name: insertNameTextField.stringValue)
 
@@ -192,88 +192,88 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
     let index = inserIndexTextField.integerValue
 
-    let row = (insertRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.Top : RowsViewRow.Bottom)
+    let row = (insertRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.top : RowsViewRow.bottom)
 
     // * * *.
 
-    rowToItems[row]!.insert(peer, atIndex: index)
+    rowToItems[row]!.insert(peer, at: index)
 
     // * * *.
 
     rowsView.insertItems(atCoordinates: [(index: index, row: row)], animated: insertAnimatedCheckbox.state == NSOnState)
   }
 
-  @IBAction private func removeItem(sender: AnyObject?)
+  @IBAction fileprivate func removeItem(_ sender: AnyObject?)
   {
     let index = removeIndexTextField.integerValue
 
-    let row = (removeRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.Top : RowsViewRow.Bottom)
+    let row = (removeRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.top : RowsViewRow.bottom)
 
     // * * *.
 
-    rowToItems[row]!.removeAtIndex(index)
+    rowToItems[row]!.remove(at: index)
 
     // * * *.
 
     rowsView.removeItems(atCoordinates: [(index: index, row: row)], animated: removeAnimatedCheckbox.state == NSOnState)
   }
 
-  @IBAction private func moveItem(sender: AnyObject?)
+  @IBAction fileprivate func moveItem(_ sender: AnyObject?)
   {
     let startIndex = moveFromIndexTextField.integerValue
 
-    let startRow = (moveFromRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.Top : RowsViewRow.Bottom)
+    let startRow = (moveFromRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.top : RowsViewRow.bottom)
 
     // * * *.
 
     let targetIndex = moveToIndexTextField.integerValue
 
-    let targetRow = (moveToRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.Top : RowsViewRow.Bottom)
+    let targetRow = (moveToRowPopupButton.indexOfSelectedItem == 0 ? RowsViewRow.top : RowsViewRow.bottom)
 
     // * * *.
 
-    rowToItems[targetRow]!.insert(rowToItems[startRow]!.removeAtIndex(startIndex), atIndex: targetIndex)
+    rowToItems[targetRow]!.insert(rowToItems[startRow]!.remove(at: startIndex), at: targetIndex)
 
     // * * *.
 
     rowsView.moveItems(atCoordinates: [(index: startIndex, row: startRow)], toCoordinates: [(index: targetIndex, row: targetRow)], animated: moveAnimatedCheckbox.state == NSOnState)
   }
 
-  @IBAction private func enlargeFirst(sender: AnyObject?)
+  @IBAction fileprivate func enlargeFirst(_ sender: AnyObject?)
   {
-    rowToItems[.Bottom]!.insert(rowToItems[.Top]!.removeAtIndex(0), atIndex: 0)
+    rowToItems[.bottom]!.insert(rowToItems[.top]!.remove(at: 0), at: 0)
 
-    rowToItems[.Bottom]!.insert(rowToItems[.Top]!.removeAtIndex(0), atIndex: 0)
+    rowToItems[.bottom]!.insert(rowToItems[.top]!.remove(at: 0), at: 0)
 
     // * * *.
 
-    let from: [(Coordinate)] = [(index: 1, row: .Top), (index: 2, row: .Top)]
+    let from: [(Coordinate)] = [(index: 1, row: .top), (index: 2, row: .top)]
 
-    let to: [(Coordinate)] = [(index: 0, row: .Bottom), (index: 1, row: .Bottom)]
+    let to: [(Coordinate)] = [(index: 0, row: .bottom), (index: 1, row: .bottom)]
 
     rowsView.moveItems(atCoordinates: from, toCoordinates: to, animated: moveAnimatedCheckbox.state == NSOnState)
   }
 
-  @IBAction private func collapseFirst(sender: AnyObject?)
+  @IBAction fileprivate func collapseFirst(_ sender: AnyObject?)
   {
-    rowToItems[.Top]!.insert(rowToItems[.Bottom]!.removeAtIndex(0), atIndex: 0)
+    rowToItems[.top]!.insert(rowToItems[.bottom]!.remove(at: 0), at: 0)
 
-    rowToItems[.Top]!.insert(rowToItems[.Bottom]!.removeAtIndex(0), atIndex: 0)
+    rowToItems[.top]!.insert(rowToItems[.bottom]!.remove(at: 0), at: 0)
 
     // * * *.
 
-    let from: [(Coordinate)] = [(index: 0, row: .Bottom), (index: 1, row: .Bottom)]
+    let from: [(Coordinate)] = [(index: 0, row: .bottom), (index: 1, row: .bottom)]
 
-    let to: [(Coordinate)] = [(index: 1, row: .Top), (index: 2, row: .Top)]
+    let to: [(Coordinate)] = [(index: 1, row: .top), (index: 2, row: .top)]
 
     rowsView.moveItems(atCoordinates: from, toCoordinates: to, animated: moveAnimatedCheckbox.state == NSOnState)
   }
 
   // MARK: - RowsViewDataSource Protocol Implementation
 
-  func bottomRowForRowsView(rowsView rowsView: RowsView) -> Bool
+  func bottomRowForRowsView(rowsView: RowsView) -> Bool
   {
-    if let bottomItems = rowToItems[.Bottom]
+    if let bottomItems = rowToItems[.bottom]
     {
       return bottomItems.count > 0
     }
@@ -283,28 +283,28 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
     }
   }
 
-  func numberOfItemsForRowsView(rowsView rowsView: RowsView, inRow row: RowsViewRow) -> Int
+  func numberOfItemsForRowsView(rowsView: RowsView, inRow row: RowsViewRow) -> Int
   {
     return rowToItems[row]!.count
   }
 
-  func itemForRowsView(rowsView rowsView: RowsView, atCoordinate coordinate: Coordinate) -> AnyObject
+  func itemForRowsView(rowsView: RowsView, atCoordinate coordinate: Coordinate) -> AnyObject
   {
     return rowToItems[coordinate.row]![coordinate.index]
   }
 
-  func topRowVanishesInRowsView(rowsView rowsView: RowsView) -> [Int]
+  func topRowVanishesInRowsView(rowsView: RowsView) -> [Int]
   {
-    let indices = Array(rowToItems[.Bottom]!.indices)
+    let indices = Array(rowToItems[.bottom]!.indices)
 
-    rowToItems[.Top] = rowToItems[.Bottom]!.remove(atIndices: indices)
+    rowToItems[.top] = rowToItems[.bottom]!.remove(atIndices: indices)
 
     return indices
   }
 
   // MARK: - RowsViewDelegate Protocol Implementation
 
-  func cellForItemInRowsView(rowsView rowsView: RowsView, atCoordinate coordinate: Coordinate) -> RowsViewCell
+  func cellForItemInRowsView(rowsView: RowsView, atCoordinate coordinate: Coordinate) -> RowsViewCell
   {
     return PeerCell(frame: NSZeroRect)
   }
