@@ -970,11 +970,7 @@ extension Array
   {
     assert(elements.count == indices.count, "The elements count didn't match the indices count.")
 
-    let ascendingIndices = indices.sorted { (a, b) -> Bool in
-      return a < b
-    }
-
-    for (element, index) in zip(elements, ascendingIndices)
+    for (element, index) in zip(elements, indices).sorted(by: { $0.1 < $1.1 })
     {
       insert(element, at: index)
     }
