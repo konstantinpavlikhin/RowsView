@@ -28,22 +28,6 @@ class PeerCell: RowsViewCell
 {
   let label: NSTextField
 
-  override var frame: NSRect
-  {
-    didSet
-    {
-      Swift.print("Frame is set with implicitAnimationsEnabled == \(NSAnimationContext.current().allowsImplicitAnimation)")
-
-      let x = NSMinX(self.bounds) + (NSWidth(self.bounds) - label.fittingSize.width) / 2.0
-
-      let y = NSMinY(self.bounds) + (NSHeight(self.bounds) - label.fittingSize.height) / 2.0
-
-      let rect = NSMakeRect(x, y, label.fittingSize.width, label.fittingSize.height)
-
-      label.frame = backingAlignedRect(rect, options: .alignAllEdgesNearest)
-    }
-  }
-
   override var objectValue: AnyObject?
   {
     didSet
@@ -85,9 +69,13 @@ class PeerCell: RowsViewCell
 
     // * * *.
 
+    addSubview(label)
+
     label.translatesAutoresizingMaskIntoConstraints = false
 
-    addSubview(label)
+    addConstraint(NSLayoutConstraint.init(item: label, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
+
+    addConstraint(NSLayoutConstraint.init(item: label, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
   }
 
   required init?(coder: NSCoder)

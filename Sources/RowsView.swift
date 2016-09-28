@@ -283,6 +283,8 @@ open class RowsView: NSView
               self.rowToCells[row]![i].animations = ["frame": animation]
 
               self.rowToCells[row]![i].frame = frames[i]
+
+              self.rowToCells[row]![i].layoutSubtreeIfNeeded()
             }
           }
         }, completionHandler: nil)
@@ -479,6 +481,8 @@ open class RowsView: NSView
             self.rowToCells[row]![i].animations = ["frame": animation]
 
             self.rowToCells[row]![i].frame = rowsToFinalFrames[row]![i]
+
+            self.rowToCells[row]![i].layoutSubtreeIfNeeded()
           }
         }
       }, completionHandler: nil)
@@ -590,6 +594,8 @@ open class RowsView: NSView
               self.rowToCells[row]![i].animations = ["frame": animation]
 
               self.rowToCells[row]![i].frame = rowsToFinalFrames[row]![i]
+
+              self.rowToCells[row]![i].layoutSubtreeIfNeeded()
             }
           }
         }, completionHandler: nil)
