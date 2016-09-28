@@ -264,7 +264,7 @@ open class RowsView: NSView
 
           animationContext.timingFunction = nil
 
-          animationContext.allowsImplicitAnimation = false
+          animationContext.allowsImplicitAnimation = true
 
           for (row, frames) in rowsToFinalFrames
           {
@@ -276,7 +276,7 @@ open class RowsView: NSView
 
               self.rowToCells[row]![i].animations = ["frame": animation]
 
-              self.rowToCells[row]![i].animator().frame = frames[i]
+              self.rowToCells[row]![i].frame = frames[i]
             }
           }
         }, completionHandler: nil)
@@ -460,7 +460,7 @@ open class RowsView: NSView
 
         animationContext.timingFunction = nil
 
-        animationContext.allowsImplicitAnimation = false
+        animationContext.allowsImplicitAnimation = true
 
         for row in affectedRows
         {
@@ -472,7 +472,7 @@ open class RowsView: NSView
 
             self.rowToCells[row]![i].animations = ["frame": animation]
 
-            self.rowToCells[row]![i].animator().frame = rowsToFinalFrames[row]![i]
+            self.rowToCells[row]![i].frame = rowsToFinalFrames[row]![i]
           }
         }
       }, completionHandler: nil)
@@ -571,7 +571,7 @@ open class RowsView: NSView
 
           animationContext.timingFunction = nil
 
-          animationContext.allowsImplicitAnimation = false
+          animationContext.allowsImplicitAnimation = true
 
           for row in affectedRows
           {
@@ -583,7 +583,7 @@ open class RowsView: NSView
 
               self.rowToCells[row]![i].animations = ["frame": animation]
 
-              self.rowToCells[row]![i].animator().frame = rowsToFinalFrames[row]![i]
+              self.rowToCells[row]![i].frame = rowsToFinalFrames[row]![i]
             }
           }
         }, completionHandler: nil)
