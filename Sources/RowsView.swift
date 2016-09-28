@@ -114,7 +114,13 @@ open class RowsView: NSView
 
       for i in 0..<cells.count
       {
-        cells[i].frame = frames[i]
+        let existingFrame = cells[i].frame
+
+        // Alter cell's frame property only if it actually has a different value.
+        if !NSEqualRects(frames[i], existingFrame)
+        {
+          cells[i].frame = frames[i]
+        }
       }
     }
   }
