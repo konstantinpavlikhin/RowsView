@@ -35,28 +35,32 @@ open class RowsViewCell: NSView
 
 // MARK: - RowsViewDataSource
 
-public protocol RowsViewDataSource
+public protocol RowsViewDataSource: class
 {
-  func bottomRowForRowsView(rowsView: RowsView) -> Bool
+  associatedtype A: AnyObject
 
-  func numberOfItemsForRowsView(rowsView: RowsView, inRow row: RowsViewRow) -> Int
+  func bottomRowForRowsView(rowsView: RowsView<A>) -> Bool
 
-  func itemForRowsView(rowsView: RowsView, atCoordinate coordinate: Coordinate) -> AnyObject
+  func numberOfItemsForRowsView(rowsView: RowsView<A>, inRow row: RowsViewRow) -> Int
+
+  func itemForRowsView(rowsView: RowsView<A>, atCoordinate coordinate: Coordinate) -> A
 
   // Возвращает индексы элементов в нижнем ряду, которые будут перемещены на место исчезнувшего верхнего ряда.
-  func topRowVanishesInRowsView(rowsView: RowsView) -> [Int]
+  func topRowVanishesInRowsView(rowsView: RowsView<A>) -> [Int]
 }
 
 // * * *.
 
-public protocol RowsViewDelegate
+public protocol RowsViewDelegate: class
 {
-  func cellForItemInRowsView(rowsView: RowsView, atCoordinate coordinate: Coordinate) -> RowsViewCell
+  associatedtype A: AnyObject
+
+  func cellForItemInRowsView(rowsView: RowsView<A>, atCoordinate coordinate: Coordinate) -> RowsViewCell
 }
 
-public class RowsViewLayout
+public class RowsViewLayout<T: AnyObject>
 {
-  public weak var rowsView: RowsView!
+  public weak var rowsView: RowsView<T>!
 
   public func framesForEquallySizedAndSpacedCells(count: Int, inRow row: RowsViewRow, hasBottomRow: Bool) -> [NSRect]
   {
@@ -64,7 +68,7 @@ public class RowsViewLayout
   }
 }
 
-public class SeparatedRowsViewLayout: RowsViewLayout
+public class SeparatedRowsViewLayout<T: AnyObject>: RowsViewLayout<T>
 {
   fileprivate let rowsProportion: CGFloat = 2.0 / 3.0
 
@@ -199,7 +203,7 @@ public class SeparatedRowsViewLayout: RowsViewLayout
 
 // MARK: - OverlappingRowsViewLayout
 
-public class OverlappingRowsViewLayout: RowsViewLayout
+public class OverlappingRowsViewLayout<T: AnyObject>: RowsViewLayout<T>
 {
   fileprivate let rowsProportion: CGFloat = 2.0 / 3.0
 
@@ -329,13 +333,13 @@ public class OverlappingRowsViewLayout: RowsViewLayout
 
 // MARK: - RowsView
 
-open class RowsView: NSView
+open class RowsView<ItemType: AnyObject>: NSView
 {
-  open var dataSource: RowsViewDataSource? = nil
+  open var dataSource: AnyRowsViewDataSource<ItemType>? = nil
 
-  open var delegate: RowsViewDelegate? = nil
+  open var delegate: AnyRowsViewDelegate<ItemType>? = nil
 
-  open var layoutObject: RowsViewLayout? = nil
+  open var layoutObject: RowsViewLayout<ItemType>? = nil
   {
     didSet
     {
@@ -352,7 +356,7 @@ open class RowsView: NSView
 
   // * * *.
 
-  fileprivate var rowToItems: [RowsViewRow: [AnyObject]] = [:]
+  fileprivate var rowToItems: [RowsViewRow: [ItemType]] = [:]
 
   fileprivate var rowToCells: [RowsViewRow: [RowsViewCell]] = [:]
 
@@ -471,7 +475,7 @@ open class RowsView: NSView
     return rowToItems[row]!.count
   }
 
-  open func item(atCoordinate coordinate: Coordinate) -> AnyObject
+  open func item(atCoordinate coordinate: Coordinate) -> ItemType
   {
     return rowToItems[coordinate.row]![coordinate.index]
   }
@@ -480,7 +484,7 @@ open class RowsView: NSView
   open func insertItems(atCoordinates coordinates: [Coordinate], animated: Bool)
   {
     // Сходить в датасурса и запросить модельные объекты.
-    let items = coordinates.map { coordinate -> AnyObject in
+    let items = coordinates.map { coordinate -> ItemType in
       return dataSource!.itemForRowsView(rowsView: self, atCoordinate: coordinate)
     }
 
@@ -672,7 +676,7 @@ open class RowsView: NSView
 
     // * * *.
 
-    var itemsAndCells: [(AnyObject, RowsViewCell)] = []
+    var itemsAndCells: [(ItemType, RowsViewCell)] = []
 
     for (atCoordinate, _) in transitionsSortedByDescendingStartingIndices
     {
@@ -973,7 +977,7 @@ open class RowsView: NSView
   }
 
   // Возвращает ячейку, соответствующую item, если таковой объект известен таблице.
-  open func cell(forItem item: AnyObject) -> RowsViewCell?
+  open func cell(forItem item: ItemType) -> RowsViewCell?
   {
     for row in RowsViewRow.allRows()
     {
@@ -991,7 +995,7 @@ open class RowsView: NSView
     return nil
   }
 
-  open func coordinate(forItem item: AnyObject) -> Coordinate?
+  open func coordinate(forItem item: ItemType) -> Coordinate?
   {
     for row in RowsViewRow.allRows()
     {

@@ -90,7 +90,7 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 {
   @IBOutlet var window: NSWindow!
 
-  let rowsView = RowsView(frame: NSZeroRect)
+  let rowsView = RowsView<Peer>(frame: NSZeroRect)
 
   // * * *.
 
@@ -161,9 +161,9 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
     // * * *.
 
-    rowsView.dataSource = self
+    rowsView.dataSource = AnyRowsViewDataSource(self)
 
-    rowsView.delegate = self
+    rowsView.delegate = AnyRowsViewDelegate(self)
 
     rowsView.layoutObject = SeparatedRowsViewLayout()
 
@@ -273,7 +273,7 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
   @IBAction fileprivate func replaceLayout(_ sender: AnyObject?)
   {
-    let newLayout = (replaceLayoutPopupButton.indexOfSelectedItem == 0 ? SeparatedRowsViewLayout() : OverlappingRowsViewLayout())
+    let newLayout = (replaceLayoutPopupButton.indexOfSelectedItem == 0 ? SeparatedRowsViewLayout<Peer>() : OverlappingRowsViewLayout<Peer>())
 
     if replaceLayoutAnimatedCheckbox.state == NSOnState
     {
@@ -314,7 +314,7 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
   // MARK: - RowsViewDataSource Protocol Implementation
 
-  func bottomRowForRowsView(rowsView: RowsView) -> Bool
+  func bottomRowForRowsView(rowsView: RowsView<Peer>) -> Bool
   {
     if let bottomItems = rowToItems[.bottom]
     {
@@ -326,17 +326,17 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
     }
   }
 
-  func numberOfItemsForRowsView(rowsView: RowsView, inRow row: RowsViewRow) -> Int
+  func numberOfItemsForRowsView(rowsView: RowsView<Peer>, inRow row: RowsViewRow) -> Int
   {
     return rowToItems[row]!.count
   }
 
-  func itemForRowsView(rowsView: RowsView, atCoordinate coordinate: Coordinate) -> AnyObject
+  func itemForRowsView(rowsView: RowsView<Peer>, atCoordinate coordinate: Coordinate) -> Peer
   {
     return rowToItems[coordinate.row]![coordinate.index]
   }
 
-  func topRowVanishesInRowsView(rowsView: RowsView) -> [Int]
+  func topRowVanishesInRowsView(rowsView: RowsView<Peer>) -> [Int]
   {
     let indices = Array(rowToItems[.bottom]!.indices)
 
@@ -347,7 +347,7 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
   // MARK: - RowsViewDelegate Protocol Implementation
 
-  func cellForItemInRowsView(rowsView: RowsView, atCoordinate coordinate: Coordinate) -> RowsViewCell
+  func cellForItemInRowsView(rowsView: RowsView<Peer>, atCoordinate coordinate: Coordinate) -> RowsViewCell
   {
     return PeerCell(frame: NSZeroRect)
   }
