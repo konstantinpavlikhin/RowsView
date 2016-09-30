@@ -54,6 +54,149 @@ public protocol RowsViewDelegate
   func cellForItemInRowsView(rowsView: RowsView, atCoordinate coordinate: Coordinate) -> RowsViewCell
 }
 
+public class RowsViewLayout
+{
+  public weak var rowsView: RowsView!
+
+  public func framesForEquallySizedAndSpacedCells(count: Int, inRow row: RowsViewRow, hasBottomRow: Bool) -> [NSRect]
+  {
+    fatalError("Method have to be overriden in a subclass")
+  }
+}
+
+public class SeparatedRowsViewLayout: RowsViewLayout
+{
+  fileprivate let rowsProportion: CGFloat = 2.0 / 3.0
+
+  fileprivate func availableRect(forRow row: RowsViewRow, hasBottomRow: Bool) -> NSRect
+  {
+    // Рассматриваем специальный случай, когда ряд всего один.
+    if(row == .top && !hasBottomRow)
+    {
+      let margins = self.margins(forRow: .top)
+
+      return rowsView.backingAlignedRect(NSInsetRect(rowsView.bounds, margins.width, margins.height), options: .alignAllEdgesNearest)
+    }
+
+    // * * *.
+
+    var topRect: NSRect = NSZeroRect
+
+    var bottomRect: NSRect = NSZeroRect
+
+    // * * *.
+
+    NSDivideRect(rowsView.bounds, &topRect, &bottomRect, (rowsView.bounds.height * rowsProportion), .maxY)
+
+    // * * *.
+
+    let possiblyFractionalRect: NSRect
+
+    let margins = self.margins(forRow: row)
+
+    switch row
+    {
+      case .top:
+        possiblyFractionalRect = NSInsetRect(topRect, margins.width, margins.height)
+
+      case .bottom:
+        possiblyFractionalRect = NSInsetRect(bottomRect, margins.width, margins.height)
+    }
+
+    // * * *.
+
+    return rowsView.backingAlignedRect(possiblyFractionalRect, options: .alignAllEdgesNearest)
+  }
+
+  fileprivate func margins(forRow row: RowsViewRow) -> NSSize
+  {
+    switch row
+    {
+      case .top:
+        return NSMakeSize(0, 0)
+
+      case .bottom:
+        let margin = rowsView.bounds.height * 0.05
+
+        return NSMakeSize(margin, margin)
+    }
+  }
+
+  fileprivate func gapWidth(forRow row: RowsViewRow) -> CGFloat
+  {
+    switch row
+    {
+      case .top:
+        return 0
+
+      case .bottom:
+        return rowsView.bounds.width * 0.05
+    }
+  }
+
+  fileprivate func cellWidthLimit(forHeight height: CGFloat, inRow row: RowsViewRow) -> CGFloat?
+  {
+    switch row
+    {
+      case .top:
+        return nil
+
+      case .bottom:
+        let sixteenByNine: CGFloat = 16.0 / 9.0
+
+        return height * sixteenByNine
+    }
+  }
+
+  override public func framesForEquallySizedAndSpacedCells(count: Int, inRow row: RowsViewRow, hasBottomRow: Bool) -> [NSRect]
+  {
+    guard count != 0 else
+    {
+      return []
+    }
+
+    // * * *.
+
+    let availableRect = self.availableRect(forRow: row, hasBottomRow:  hasBottomRow)
+
+    let gapWidth = self.gapWidth(forRow: row)
+
+    let availableCellWidth = (availableRect.width - CGFloat(count - 1) * gapWidth) / CGFloat(count)
+
+    // * * *.
+
+    let frameWidth: CGFloat
+
+    if let cellWidthLimit = cellWidthLimit(forHeight: availableRect.height, inRow:  row)
+    {
+      frameWidth = availableCellWidth > cellWidthLimit ? cellWidthLimit : availableCellWidth
+    }
+    else
+    {
+      frameWidth = availableCellWidth
+    }
+
+    // * * *.
+
+    var frames: [NSRect] = []
+
+    let cellsBoundingWidth = CGFloat(count) * frameWidth + CGFloat(count - 1) * gapWidth
+
+    var currentX = NSMinX(availableRect) + (NSWidth(availableRect) - cellsBoundingWidth) / 2.0
+
+    for _ in 0..<count
+    {
+      let frame = NSMakeRect(currentX, NSMinY(availableRect), frameWidth, availableRect.height)
+
+      frames.append(rowsView.backingAlignedRect(frame, options: .alignAllEdgesNearest))
+
+      currentX += frameWidth + gapWidth
+    }
+
+    return frames
+  }
+}
+
 // MARK: - RowsView
 
 open class RowsView: NSView
@@ -61,6 +204,21 @@ open class RowsView: NSView
   open var dataSource: RowsViewDataSource? = nil
 
   open var delegate: RowsViewDelegate? = nil
+
+  open var layoutObject: RowsViewLayout? = nil
+  {
+    didSet
+    {
+      oldValue?.rowsView = nil
+
+      if let someLayout = layoutObject
+      {
+        someLayout.rowsView = self
+      }
+
+      needsLayout = true
+    }
+  }
 
   // * * *.
 
@@ -101,6 +259,11 @@ open class RowsView: NSView
 
     // * * *.
 
+    guard let layoutObject = self.layoutObject else
+    {
+      return
+    }
+
     for row in RowsViewRow.allRows()
     {
       let cells = rowToCells[row]!
@@ -110,7 +273,7 @@ open class RowsView: NSView
         continue
       }
 
-      let frames = framesForEquallySizedAndSpacedCells(count: cells.count, inRow: row, hasBottomRow: rowToCells[.bottom]!.count > 0)
+      let frames = layoutObject.framesForEquallySizedAndSpacedCells(count: cells.count, inRow: row, hasBottomRow: rowToCells[.bottom]!.count > 0)
 
       for i in 0..<cells.count
       {
@@ -231,7 +394,11 @@ open class RowsView: NSView
 
     for (row, insertionsCount) in affectedRowsToInsertionsCount
     {
-      rowsToFinalFrames[row] = framesForEquallySizedAndSpacedCells(count: (rowToCells[row]!.count + insertionsCount), inRow: row, hasBottomRow: rowToItems[.bottom]!.count > 0)
+      let c = (rowToCells[row]!.count + insertionsCount)
+
+      let actualFrames = layoutObject?.framesForEquallySizedAndSpacedCells(count: c, inRow: row, hasBottomRow: rowToItems[.bottom]!.count > 0)
+
+      rowsToFinalFrames[row] = actualFrames ?? Array<NSRect>(repeating: NSZeroRect, count: c)
     }
 
     // Смапить координаты в словарь [RowsViewRow: [Int]], где [Int] — массив индектов вставок в данном ряду.
@@ -458,7 +625,11 @@ open class RowsView: NSView
 
     for row in affectedRows
     {
-      rowsToFinalFrames[row] = framesForEquallySizedAndSpacedCells(count: rowToCells[row]!.count, inRow: row, hasBottomRow: rowToItems[.bottom]!.count > 0)
+      let c = rowToCells[row]!.count
+
+      let actualFrames = layoutObject?.framesForEquallySizedAndSpacedCells(count: c, inRow: row, hasBottomRow: rowToItems[.bottom]!.count > 0)
+
+      rowsToFinalFrames[row] = actualFrames ?? Array<NSRect>(repeating: NSZeroRect, count: c)
     }
 
     if animated
@@ -571,7 +742,11 @@ open class RowsView: NSView
 
       for row in affectedRows
       {
-        rowsToFinalFrames[row] = self.framesForEquallySizedAndSpacedCells(count: self.rowToCells[row]!.count, inRow: row, hasBottomRow: self.rowToItems[.bottom]!.count > 0)
+        let c = self.rowToCells[row]!.count
+
+        let actualFrames = self.layoutObject?.framesForEquallySizedAndSpacedCells(count: c, inRow: row, hasBottomRow: self.rowToItems[.bottom]!.count > 0)
+
+        rowsToFinalFrames[row] = actualFrames ?? Array<NSRect>(repeating: NSZeroRect, count: c)
       }
 
       if animated
@@ -733,138 +908,6 @@ open class RowsView: NSView
     {
       subview.removeFromSuperview()
     }
-  }
-
-  // MARK: Private Methods | Geometry
-
-  fileprivate let rowsProportion: CGFloat = 2.0 / 3.0
-
-  fileprivate func availableRect(forRow row: RowsViewRow, hasBottomRow: Bool) -> NSRect
-  {
-    // Рассматриваем специальный случай, когда ряд всего один.
-    if(row == .top && !hasBottomRow)
-    {
-      let margins = self.margins(forRow: .top)
-
-      return backingAlignedRect(NSInsetRect(bounds, margins.width, margins.height), options: .alignAllEdgesNearest)
-    }
-
-    // * * *.
-
-    var topRect: NSRect = NSZeroRect
-
-    var bottomRect: NSRect = NSZeroRect
-
-    // * * *.
-
-    NSDivideRect(bounds, &topRect, &bottomRect, (bounds.height * rowsProportion), .maxY)
-
-    // * * *.
-
-    let possiblyFractionalRect: NSRect
-
-    let margins = self.margins(forRow: row)
-
-    switch row
-    {
-      case .top:
-        possiblyFractionalRect = NSInsetRect(topRect, margins.width, margins.height)
-
-      case .bottom:
-        possiblyFractionalRect = NSInsetRect(bottomRect, margins.width, margins.height)
-    }
-
-    // * * *.
-
-    return backingAlignedRect(possiblyFractionalRect, options: .alignAllEdgesNearest)
-  }
-
-  fileprivate func margins(forRow row: RowsViewRow) -> NSSize
-  {
-    switch row
-    {
-      case .top:
-        return NSMakeSize(0, 0)
-
-      case .bottom:
-        let margin = bounds.height * 0.05
-
-        return NSMakeSize(margin, margin)
-    }
-  }
-
-  fileprivate func gapWidth(forRow row: RowsViewRow) -> CGFloat
-  {
-    switch row
-    {
-      case .top:
-        return 0
-
-      case .bottom:
-        return bounds.width * 0.05
-    }
-  }
-
-  fileprivate func cellWidthLimit(forHeight height: CGFloat, inRow row: RowsViewRow) -> CGFloat?
-  {
-    switch row
-    {
-      case .top:
-        return nil
-
-      case .bottom:
-        let sixteenByNine: CGFloat = 16.0 / 9.0
-
-        return height * sixteenByNine
-    }
-  }
-
-  fileprivate func framesForEquallySizedAndSpacedCells(count: Int, inRow row: RowsViewRow, hasBottomRow: Bool) -> [NSRect]
-  {
-    guard count != 0 else
-    {
-      return []
-    }
-
-    // * * *.
-
-    let availableRect = self.availableRect(forRow: row, hasBottomRow:  hasBottomRow)
-
-    let gapWidth = self.gapWidth(forRow: row)
-
-    let availableCellWidth = (availableRect.width - CGFloat(count - 1) * gapWidth) / CGFloat(count)
-
-    // * * *.
-
-    let frameWidth: CGFloat
-
-    if let cellWidthLimit = cellWidthLimit(forHeight: availableRect.height, inRow:  row)
-    {
-      frameWidth = availableCellWidth > cellWidthLimit ? cellWidthLimit : availableCellWidth
-    }
-    else
-    {
-      frameWidth = availableCellWidth
-    }
-
-    // * * *.
-
-    var frames: [NSRect] = []
-
-    let cellsBoundingWidth = CGFloat(count) * frameWidth + CGFloat(count - 1) * gapWidth
-
-    var currentX = NSMinX(availableRect) + (NSWidth(availableRect) - cellsBoundingWidth) / 2.0
-
-    for _ in 0..<count
-    {
-      let frame = NSMakeRect(currentX, NSMinY(availableRect), frameWidth, availableRect.height)
-
-      frames.append(backingAlignedRect(frame, options: .alignAllEdgesNearest))
-
-      currentX += frameWidth + gapWidth
-    }
-
-    return frames
   }
 
   // MARK: - Private Methods | Animations

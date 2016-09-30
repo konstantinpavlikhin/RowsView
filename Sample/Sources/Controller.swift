@@ -158,6 +158,8 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
     rowsView.delegate = self
 
+    rowsView.layoutObject = SeparatedRowsViewLayout()
+
     // * * *.
 
     rowsView.translatesAutoresizingMaskIntoConstraints = false
