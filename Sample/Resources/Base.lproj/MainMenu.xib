@@ -706,16 +706,16 @@
         <window title="Inspector" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="" animationBehavior="default" id="s3E-Gd-e3T" userLabel="Inspector" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="139" y="81" width="284" height="836"/>
+            <rect key="contentRect" x="139" y="81" width="313" height="836"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" id="CJd-cO-xha">
-                <rect key="frame" x="0.0" y="0.0" width="284" height="836"/>
+                <rect key="frame" x="0.0" y="0.0" width="313" height="836"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <box borderType="line" title="Insert Peer" translatesAutoresizingMaskIntoConstraints="NO" id="gk3-Ee-RyH">
-                        <rect key="frame" x="17" y="610" width="250" height="206"/>
+                        <rect key="frame" x="17" y="610" width="279" height="206"/>
                         <view key="contentView" id="AxH-MQ-cCZ">
-                            <rect key="frame" x="1" y="1" width="248" height="190"/>
+                            <rect key="frame" x="1" y="1" width="277" height="190"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bwf-As-11I">
@@ -727,7 +727,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NIT-xZ-LwX">
-                                    <rect key="frame" x="103" y="148" width="125" height="22"/>
+                                    <rect key="frame" x="103" y="148" width="154" height="22"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Pupkine" drawsBackground="YES" id="gzc-uA-UW8">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -743,7 +743,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="l2G-G2-OpQ">
-                                    <rect key="frame" x="103" y="116" width="110" height="22"/>
+                                    <rect key="frame" x="103" y="116" width="139" height="22"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="0" drawsBackground="YES" id="loh-tB-bE6">
                                         <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="x9j-D5-VHQ"/>
                                         <font key="font" metaFont="system"/>
@@ -752,7 +752,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IQL-yg-LRu">
-                                    <rect key="frame" x="212" y="113" width="19" height="27"/>
+                                    <rect key="frame" x="241" y="113" width="19" height="27"/>
                                     <stepperCell key="cell" continuous="YES" alignment="left" maxValue="100" id="Qlz-vW-Srv"/>
                                     <connections>
                                         <action selector="takeIntegerValueFrom:" target="l2G-G2-OpQ" id="Tyk-er-MCh"/>
@@ -767,7 +767,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mIa-Go-Vme">
-                                    <rect key="frame" x="101" y="82" width="130" height="26"/>
+                                    <rect key="frame" x="101" y="82" width="159" height="26"/>
                                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="Vx7-LN-aIQ">
                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="menu"/>
@@ -798,7 +798,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <button verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Fdg-Jz-sRQ">
-                                    <rect key="frame" x="101" y="59" width="129" height="18"/>
+                                    <rect key="frame" x="101" y="59" width="158" height="18"/>
                                     <buttonCell key="cell" type="check" title="Animate" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="K3s-Z2-j7j">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
@@ -840,9 +840,9 @@
                         </view>
                     </box>
                     <box borderType="line" title="Remove Peer" translatesAutoresizingMaskIntoConstraints="NO" id="9lr-B2-oBb" userLabel="Remove Peer">
-                        <rect key="frame" x="17" y="432" width="250" height="174"/>
+                        <rect key="frame" x="17" y="432" width="279" height="174"/>
                         <view key="contentView" id="086-i5-UlL">
-                            <rect key="frame" x="1" y="1" width="248" height="158"/>
+                            <rect key="frame" x="1" y="1" width="277" height="158"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wBh-C7-BMO">
@@ -854,7 +854,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4CF-zN-fmL">
-                                    <rect key="frame" x="103" y="116" width="110" height="22"/>
+                                    <rect key="frame" x="103" y="116" width="139" height="22"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="0" drawsBackground="YES" id="3yM-Kh-Bu5">
                                         <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="OSM-en-W9K"/>
                                         <font key="font" metaFont="system"/>
@@ -863,7 +863,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sCQ-z7-ybe">
-                                    <rect key="frame" x="212" y="113" width="19" height="27"/>
+                                    <rect key="frame" x="241" y="113" width="19" height="27"/>
                                     <stepperCell key="cell" continuous="YES" alignment="left" maxValue="100" id="ynb-oK-qzH"/>
                                     <connections>
                                         <action selector="takeIntegerValueFrom:" target="4CF-zN-fmL" id="ze7-sT-TP9"/>
@@ -878,7 +878,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HvI-cq-Zlt">
-                                    <rect key="frame" x="101" y="82" width="130" height="26"/>
+                                    <rect key="frame" x="101" y="82" width="159" height="26"/>
                                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="7hc-Y8-70e">
                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="menu"/>
@@ -909,7 +909,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <button verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="pMK-Je-Ldi">
-                                    <rect key="frame" x="101" y="59" width="129" height="18"/>
+                                    <rect key="frame" x="101" y="59" width="158" height="18"/>
                                     <buttonCell key="cell" type="check" title="Animate" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="z5R-8d-OED">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
@@ -945,9 +945,9 @@
                         </view>
                     </box>
                     <box borderType="line" title="Move Peer" translatesAutoresizingMaskIntoConstraints="NO" id="1Az-Qz-QxG" userLabel="Move Peer">
-                        <rect key="frame" x="17" y="162" width="250" height="266"/>
+                        <rect key="frame" x="17" y="162" width="279" height="266"/>
                         <view key="contentView" id="yAw-B6-zTk">
-                            <rect key="frame" x="1" y="1" width="248" height="250"/>
+                            <rect key="frame" x="1" y="1" width="277" height="250"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qC9-bF-7wF">
@@ -959,7 +959,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XhJ-7Q-0BY">
-                                    <rect key="frame" x="103" y="208" width="110" height="22"/>
+                                    <rect key="frame" x="103" y="208" width="139" height="22"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="0" drawsBackground="YES" id="LdV-sd-Qcu">
                                         <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="T4V-1L-DiU"/>
                                         <font key="font" metaFont="system"/>
@@ -968,7 +968,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2nd-r7-dQn">
-                                    <rect key="frame" x="212" y="205" width="19" height="27"/>
+                                    <rect key="frame" x="241" y="205" width="19" height="27"/>
                                     <stepperCell key="cell" continuous="YES" alignment="left" maxValue="100" id="gsG-6V-xlH"/>
                                     <connections>
                                         <action selector="takeIntegerValueFrom:" target="XhJ-7Q-0BY" id="iUn-2a-iHD"/>
@@ -983,7 +983,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xlQ-wf-Y3Y">
-                                    <rect key="frame" x="101" y="174" width="130" height="26"/>
+                                    <rect key="frame" x="101" y="174" width="159" height="26"/>
                                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="6I0-LA-poR">
                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="menu"/>
@@ -1004,7 +1004,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="V0d-OK-COX">
-                                    <rect key="frame" x="103" y="147" width="110" height="22"/>
+                                    <rect key="frame" x="103" y="147" width="139" height="22"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="0" drawsBackground="YES" id="9I4-ue-96q">
                                         <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="0NR-MM-fQH"/>
                                         <font key="font" metaFont="system"/>
@@ -1013,7 +1013,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EXZ-jT-Blu">
-                                    <rect key="frame" x="212" y="144" width="19" height="27"/>
+                                    <rect key="frame" x="241" y="144" width="19" height="27"/>
                                     <stepperCell key="cell" continuous="YES" alignment="left" maxValue="100" id="Niu-NN-Hmy"/>
                                     <connections>
                                         <action selector="takeIntegerValueFrom:" target="V0d-OK-COX" id="9LZ-Ot-WC4"/>
@@ -1046,14 +1046,14 @@
                                     </textFieldCell>
                                 </textField>
                                 <button verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="g3G-CF-7Lu">
-                                    <rect key="frame" x="101" y="92" width="129" height="18"/>
+                                    <rect key="frame" x="101" y="92" width="158" height="18"/>
                                     <buttonCell key="cell" type="check" title="Animate" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Slc-mT-Rj6">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
                                 </button>
                                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1hg-XQ-sOf">
-                                    <rect key="frame" x="101" y="113" width="130" height="26"/>
+                                    <rect key="frame" x="101" y="113" width="159" height="26"/>
                                     <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="ZIP-Da-GP5">
                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="menu"/>
@@ -1066,7 +1066,7 @@
                                     </popUpButtonCell>
                                 </popUpButton>
                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yUn-4h-dLP">
-                                    <rect key="frame" x="173" y="46" width="61" height="32"/>
+                                    <rect key="frame" x="202" y="46" width="61" height="32"/>
                                     <buttonCell key="cell" type="push" title="1 →" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="u1Y-WW-0OI">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
@@ -1076,7 +1076,7 @@
                                     </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9CT-yC-1GP">
-                                    <rect key="frame" x="173" y="13" width="61" height="32"/>
+                                    <rect key="frame" x="202" y="13" width="61" height="32"/>
                                     <buttonCell key="cell" type="push" title="1 ←" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JH3-2n-UQR">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
@@ -1131,9 +1131,9 @@
                         </view>
                     </box>
                     <box borderType="line" title="Replace Layout" translatesAutoresizingMaskIntoConstraints="NO" id="NnK-NX-NXh" userLabel="Replace Layout">
-                        <rect key="frame" x="17" y="16" width="250" height="142"/>
+                        <rect key="frame" x="17" y="16" width="279" height="142"/>
                         <view key="contentView" id="oVb-0G-B7e">
-                            <rect key="frame" x="1" y="1" width="248" height="126"/>
+                            <rect key="frame" x="1" y="1" width="277" height="126"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Uc7-M0-5Me">
@@ -1145,7 +1145,7 @@
                                     </textFieldCell>
                                 </textField>
                                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jOx-ps-q1j" userLabel="Layouts">
-                                    <rect key="frame" x="101" y="82" width="130" height="26"/>
+                                    <rect key="frame" x="101" y="82" width="159" height="26"/>
                                     <popUpButtonCell key="cell" type="push" title="Separated" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="oEw-GP-VQp" userLabel="Layouts">
                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="menu"/>
@@ -1176,18 +1176,30 @@
                                     </textFieldCell>
                                 </textField>
                                 <button verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="G4x-vu-mq9">
-                                    <rect key="frame" x="101" y="59" width="129" height="18"/>
+                                    <rect key="frame" x="101" y="59" width="158" height="18"/>
                                     <buttonCell key="cell" type="check" title="Animate" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="tEe-Bd-ea0">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
                                 </button>
+                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qjo-3X-0Qz">
+                                    <rect key="frame" x="186" y="13" width="77" height="32"/>
+                                    <buttonCell key="cell" type="push" title="P → G" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="DjA-oo-Qcv">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="privateToGroup:" target="dmk-vJ-KN2" id="Jd4-MW-Xpb"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="9ac-Ws-UPP" firstAttribute="top" secondItem="G4x-vu-mq9" secondAttribute="bottom" constant="20" symbolic="YES" id="2ln-R5-Qx8"/>
+                                <constraint firstItem="qjo-3X-0Qz" firstAttribute="baseline" secondItem="9ac-Ws-UPP" secondAttribute="baseline" id="36j-o6-pu7"/>
                                 <constraint firstItem="jOx-ps-q1j" firstAttribute="top" secondItem="oVb-0G-B7e" secondAttribute="top" constant="20" symbolic="YES" id="7ZH-a0-MB7"/>
                                 <constraint firstItem="G4x-vu-mq9" firstAttribute="leading" secondItem="jOx-ps-q1j" secondAttribute="leading" id="I2T-EH-DZr"/>
                                 <constraint firstItem="G4x-vu-mq9" firstAttribute="baseline" secondItem="Jzn-dv-XZc" secondAttribute="baseline" id="IjI-fC-Wrr"/>
+                                <constraint firstAttribute="trailing" secondItem="qjo-3X-0Qz" secondAttribute="trailing" constant="20" symbolic="YES" id="MNM-ix-KDR"/>
                                 <constraint firstItem="G4x-vu-mq9" firstAttribute="leading" secondItem="Jzn-dv-XZc" secondAttribute="trailing" constant="8" symbolic="YES" id="O4c-Nh-E3b"/>
                                 <constraint firstItem="9ac-Ws-UPP" firstAttribute="leading" secondItem="jOx-ps-q1j" secondAttribute="leading" id="Xw5-mX-Bmo"/>
                                 <constraint firstAttribute="trailing" secondItem="jOx-ps-q1j" secondAttribute="trailing" constant="20" symbolic="YES" id="aAy-oM-UTf"/>
@@ -1196,6 +1208,7 @@
                                 <constraint firstAttribute="bottom" secondItem="9ac-Ws-UPP" secondAttribute="bottom" constant="20" symbolic="YES" id="dH2-KB-pma"/>
                                 <constraint firstItem="Uc7-M0-5Me" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="oVb-0G-B7e" secondAttribute="leading" constant="20" symbolic="YES" id="gat-0v-Zs3"/>
                                 <constraint firstItem="Jzn-dv-XZc" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="oVb-0G-B7e" secondAttribute="leading" constant="20" symbolic="YES" id="jDy-iZ-Fog"/>
+                                <constraint firstItem="qjo-3X-0Qz" firstAttribute="leading" secondItem="9ac-Ws-UPP" secondAttribute="trailing" constant="12" symbolic="YES" id="sUo-e5-KzB"/>
                                 <constraint firstAttribute="trailing" secondItem="G4x-vu-mq9" secondAttribute="trailing" constant="20" symbolic="YES" id="toG-f7-xvd"/>
                                 <constraint firstItem="jOx-ps-q1j" firstAttribute="leading" secondItem="Uc7-M0-5Me" secondAttribute="trailing" constant="8" symbolic="YES" id="v3k-fd-Y2i"/>
                                 <constraint firstItem="G4x-vu-mq9" firstAttribute="top" secondItem="jOx-ps-q1j" secondAttribute="bottom" constant="10" id="zso-3S-p03"/>

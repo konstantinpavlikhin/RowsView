@@ -291,6 +291,27 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
     }
   }
 
+  @IBAction fileprivate func privateToGroup(_ sender: AnyObject?)
+  {
+    NSAnimationContext.runAnimationGroup({ (context) in
+      context.allowsImplicitAnimation = true
+
+      rowsView.layoutObject = SeparatedRowsViewLayout()
+
+      rowsView.layoutSubtreeIfNeeded()
+
+      let peer = Peer(name: "Combo breaker")
+
+      let index = 0
+
+      let row: RowsViewRow = .bottom
+
+      rowToItems[row]!.insert(peer, at: index)
+
+      rowsView.insertItems(atCoordinates: [(index: index, row: row)], animated: true)
+    }, completionHandler: nil)
+  }
+
   // MARK: - RowsViewDataSource Protocol Implementation
 
   func bottomRowForRowsView(rowsView: RowsView) -> Bool
