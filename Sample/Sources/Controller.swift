@@ -158,7 +158,7 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
     rowsView.delegate = self
 
-    rowsView.layoutObject = SeparatedRowsViewLayout()
+    rowsView.layoutObject = OverlappingRowsViewLayout()
 
     // * * *.
 

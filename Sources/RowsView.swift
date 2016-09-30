@@ -197,6 +197,136 @@ public class SeparatedRowsViewLayout: RowsViewLayout
   }
 }
 
+// MARK: - OverlappingRowsViewLayout
+
+public class OverlappingRowsViewLayout: RowsViewLayout
+{
+  fileprivate let rowsProportion: CGFloat = 2.0 / 3.0
+
+  fileprivate func availableRect(forRow row: RowsViewRow, hasBottomRow: Bool) -> NSRect
+  {
+    var rect: NSRect!
+
+    switch row
+    {
+      case .top:
+        rect = rowsView.bounds
+
+      case .bottom:
+        var unusedValue = NSZeroRect
+
+        var bottomRect = NSZeroRect
+
+        NSDivideRect(rowsView.bounds, &unusedValue, &bottomRect, (rowsView.bounds.height * rowsProportion), .maxY)
+
+        rect = bottomRect
+    }
+
+    let margins = self.margins(forRow: row)
+
+    let rectWithMargins = NSInsetRect(rect, margins.width, margins.height)
+
+    return rowsView.backingAlignedRect(rectWithMargins, options: .alignAllEdgesNearest)
+  }
+
+  fileprivate func margins(forRow row: RowsViewRow) -> NSSize
+  {
+    switch row
+    {
+      case .top:
+        return NSMakeSize(0, 0)
+
+      case .bottom:
+        let margin = rowsView.bounds.height * 0.05
+
+        return NSMakeSize(margin, margin)
+    }
+  }
+
+  fileprivate func gapWidth(forRow row: RowsViewRow) -> CGFloat
+  {
+    switch row
+    {
+      case .top:
+        return 0
+
+      case .bottom:
+        return rowsView.bounds.width * 0.05
+    }
+  }
+
+  fileprivate func cellWidthLimit(forHeight height: CGFloat, inRow row: RowsViewRow) -> CGFloat?
+  {
+    switch row
+    {
+      case .top:
+        return nil
+
+      case .bottom:
+        let sixteenByNine: CGFloat = 16.0 / 9.0
+
+        return height * sixteenByNine
+    }
+  }
+
+  override public func framesForEquallySizedAndSpacedCells(count: Int, inRow row: RowsViewRow, hasBottomRow: Bool) -> [NSRect]
+  {
+    guard count != 0 else
+    {
+      return []
+    }
+
+    // * * *.
+
+    let availableRect = self.availableRect(forRow: row, hasBottomRow:  hasBottomRow)
+
+    let gapWidth = self.gapWidth(forRow: row)
+
+    let availableCellWidth = (availableRect.width - CGFloat(count - 1) * gapWidth) / CGFloat(count)
+
+    // * * *.
+
+    let frameWidth: CGFloat
+
+    if let cellWidthLimit = cellWidthLimit(forHeight: availableRect.height, inRow:  row)
+    {
+      frameWidth = availableCellWidth > cellWidthLimit ? cellWidthLimit : availableCellWidth
+    }
+    else
+    {
+      frameWidth = availableCellWidth
+    }
+
+    // * * *.
+
+    var frames: [NSRect] = []
+
+    let cellsBoundingWidth = CGFloat(count) * frameWidth + CGFloat(count - 1) * gapWidth
+
+    var currentX: CGFloat = 0
+
+    switch row
+    {
+      case .top:
+        currentX = NSMinX(availableRect) + (NSWidth(availableRect) - cellsBoundingWidth) / 2.0
+
+      case .bottom:
+        currentX = NSMinX(availableRect)
+    }
+
+    for _ in 0..<count
+    {
+      let frame = NSMakeRect(currentX, NSMinY(availableRect), frameWidth, availableRect.height)
+
+      frames.append(rowsView.backingAlignedRect(frame, options: .alignAllEdgesNearest))
+
+      currentX += frameWidth + gapWidth
+    }
+
+    return frames
+  }
+}
+
 // MARK: - RowsView
 
 open class RowsView: NSView
