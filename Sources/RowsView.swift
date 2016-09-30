@@ -356,9 +356,9 @@ open class RowsView<ItemType: AnyObject>: NSView
 
   // * * *.
 
-  fileprivate var rowToItems: [RowsViewRow: [ItemType]] = [:]
+  internal var rowToItems: [RowsViewRow: [ItemType]] = [:]
 
-  fileprivate var rowToCells: [RowsViewRow: [RowsViewCell]] = [:]
+  internal var rowToCells: [RowsViewRow: [RowsViewCell]] = [:]
 
   // MARK: - Initialization
 
