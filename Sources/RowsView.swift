@@ -459,7 +459,7 @@ open class RowsView: NSView
 
         //cell.layerContentsRedrawPolicy = .BeforeViewResize
 
-        addSubview(cell)
+        addSubview(cell, atCoordinate: coordinate)
       }
     }
 
@@ -624,7 +624,7 @@ open class RowsView: NSView
     {
       rowToCells[coordinate.row]!.insert(cell, at: coordinate.index)
 
-      addSubview(cell)
+      addSubview(cell, atCoordinate: coordinate)
     }
 
     var uglyMutableIndex = 0
@@ -761,6 +761,19 @@ open class RowsView: NSView
 
       rowsToFinalFrames[row] = actualFrames ?? Array<NSRect>(repeating: NSZeroRect, count: c)
     }
+
+    // * * *.
+
+    var linearViewsArray: [RowsViewCell] = []
+
+    for row in RowsViewRow.allRows()
+    {
+      linearViewsArray += rowToCells[row]!
+    }
+
+    subviews = linearViewsArray
+
+    // * * *.
 
     if animated
     {
@@ -1015,7 +1028,7 @@ open class RowsView: NSView
 
       spareCell.objectValue = rowToItems[coordinate.row]![coordinate.index]
 
-      addSubview(spareCell)
+      addSubview(spareCell, atCoordinate: coordinate)
 
       spareCell.frame = existingFrame
     }
@@ -1037,6 +1050,32 @@ open class RowsView: NSView
     for subview in subviews
     {
       subview.removeFromSuperview()
+    }
+  }
+
+  private func addSubview(_ cell: RowsViewCell, atCoordinate coordinate: Coordinate)
+  {
+    if rowToCells[coordinate.row]!.count == 1
+    {
+      switch coordinate.row
+      {
+        case .top:
+          addSubview(cell, positioned: .below, relativeTo: nil)
+
+        case .bottom:
+          addSubview(cell, positioned: .above, relativeTo: nil)
+      }
+    }
+    else
+    {
+      switch coordinate.index
+      {
+        case 0:
+          addSubview(cell, positioned: .below, relativeTo: rowToCells[coordinate.row]![coordinate.index + 1])
+
+        default:
+          addSubview(cell, positioned: .above, relativeTo: rowToCells[coordinate.row]![coordinate.index - 1])
+      }
     }
   }
 
