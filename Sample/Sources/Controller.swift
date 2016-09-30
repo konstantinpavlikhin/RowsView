@@ -129,6 +129,13 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
   @IBOutlet var moveButton: NSButton!
 
+  // Replace layout.
+  @IBOutlet var replaceLayoutPopupButton: NSPopUpButton!
+
+  @IBOutlet var replaceLayoutAnimatedCheckbox: NSButton!
+
+  @IBOutlet var replaceLayoutButton: NSButton!
+
   // * * *.
 
   var mePeer: Peer = Peer(name: "Me")
@@ -158,7 +165,7 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
 
     rowsView.delegate = self
 
-    rowsView.layoutObject = OverlappingRowsViewLayout()
+    rowsView.layoutObject = SeparatedRowsViewLayout()
 
     // * * *.
 
@@ -262,6 +269,26 @@ class Controller: NSObject, RowsViewDataSource, RowsViewDelegate
     let to: [(Coordinate)] = [(index: 1, row: .top), (index: 2, row: .top)]
 
     rowsView.moveItems(atCoordinates: from, toCoordinates: to, animated: moveAnimatedCheckbox.state == NSOnState)
+  }
+
+  @IBAction fileprivate func replaceLayout(_ sender: AnyObject?)
+  {
+    let newLayout = (replaceLayoutPopupButton.indexOfSelectedItem == 0 ? SeparatedRowsViewLayout() : OverlappingRowsViewLayout())
+
+    if replaceLayoutAnimatedCheckbox.state == NSOnState
+    {
+      NSAnimationContext.runAnimationGroup({ (context) in
+        context.allowsImplicitAnimation = true
+
+        rowsView.layoutObject = newLayout
+
+        rowsView.layoutSubtreeIfNeeded()
+      }, completionHandler: nil)
+    }
+    else
+    {
+      rowsView.layoutObject = newLayout
+    }
   }
 
   // MARK: - RowsViewDataSource Protocol Implementation
