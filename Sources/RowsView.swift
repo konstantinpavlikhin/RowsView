@@ -1011,6 +1011,19 @@ open class RowsView<ItemType: AnyObject>: NSView
     return nil
   }
 
+  // Перезапрашивает модельные объекты у датасурса и обновляет objectValue у соответствующих ячеек.
+  open func reloadItems(atCoordinates coordinates: [Coordinate])
+  {
+    for coordinate in coordinates
+    {
+      let newItem = dataSource!.itemForRowsView(rowsView: self, atCoordinate: coordinate)
+
+      rowToItems[coordinate.row]![coordinate.index] = newItem
+
+      rowToCells[coordinate.row]![coordinate.index].objectValue = newItem
+    }
+  }
+
   // Дропает ячейки и запрашивает замену у делегата.
   open func reacquireCellsForItems(atCoordinates coordinates: [Coordinate])
   {
