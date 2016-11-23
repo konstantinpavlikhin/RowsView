@@ -376,8 +376,6 @@ open class RowsView<ItemType: AnyObject>: NSView
     super.init(frame: frameRect)
 
     self.wantsLayer = true
-
-    self.layer?.backgroundColor = NSColor.yellow.withAlphaComponent(0.5).cgColor
   }
   
   required public init?(coder: NSCoder)
