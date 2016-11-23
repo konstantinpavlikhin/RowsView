@@ -335,6 +335,14 @@ public class OverlappingRowsViewLayout<T: AnyObject>: RowsViewLayout<T>
 
 open class RowsView<ItemType: AnyObject>: NSView
 {
+  override open var frame: NSRect
+  {
+    didSet
+    {
+      needsLayout = true
+    }
+  }
+
   open var dataSource: AnyRowsViewDataSource<ItemType>? = nil
 
   open var delegate: AnyRowsViewDelegate<ItemType>? = nil
