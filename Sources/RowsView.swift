@@ -489,6 +489,25 @@ open class RowsView<ItemType: AnyObject>: NSView
   // Вставляет элементы по данным координатам.
   open func insertItems(atCoordinates coordinates: [Coordinate], animated: Bool)
   {
+    /*
+    // Проверка на уникальность переданных координат.
+    var knownCoordinates: [Coordinate] = []
+
+    for coordinate in coordinates
+    {
+      if knownCoordinates.contains(where: { (knownCoordinate) -> Bool in return coordinate == knownCoordinate })
+      {
+        assert(false, "Duplicate coordinates are not allowed in insertItems(...): coordinate \(coordinate) is included more than once in array \(coordinates)")
+      }
+      else
+      {
+        knownCoordinates.append(coordinate)
+      }
+    }
+    */
+
+    // * * *.
+
     // Сходить в датасурса и запросить модельные объекты.
     let items = coordinates.map { coordinate -> ItemType in
       return dataSource!.itemForRowsView(rowsView: self, atCoordinate: coordinate)
