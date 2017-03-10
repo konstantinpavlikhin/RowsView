@@ -560,7 +560,7 @@ open class RowsView<ItemType: AnyObject>: NSView
       rowsToFinalFrames[row] = actualFrames ?? Array<NSRect>(repeating: NSZeroRect, count: c)
     }
 
-    // Смапить координаты в словарь [RowsViewRow: [Int]], где [Int] — массив индектов вставок в данном ряду.
+    // Смапить координаты в словарь [RowsViewRow: [Int]], где [Int] — массив индексов вставок в данном ряду.
     var affectedRowsToInsertionIndices: [RowsViewRow: [Int]] = [:]
 
     for (index, row) in coordinates
