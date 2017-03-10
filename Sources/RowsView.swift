@@ -561,6 +561,7 @@ open class RowsView<ItemType: AnyObject>: NSView
     {
       let c = (rowToCells[row]!.count + insertionsCount)
 
+      // TODO: ошибка в аргументе hasBottomRow?
       let actualFrames = layoutObject?.framesForEquallySizedAndSpacedCells(count: c, inRow: row, hasBottomRow: rowToItems[.bottom]!.count > 0)
 
       rowsToFinalFrames[row] = actualFrames ?? Array<NSRect>(repeating: NSZeroRect, count: c)
