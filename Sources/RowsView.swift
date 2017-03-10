@@ -359,6 +359,11 @@ open class RowsView<ItemType: AnyObject>: NSView
       }
 
       needsLayout = true
+
+      if ProcessInfo().isRunningOnYosemite()
+      {
+        applyFrames()
+      }
     }
   }
 
@@ -399,33 +404,7 @@ open class RowsView<ItemType: AnyObject>: NSView
 
     // * * *.
 
-    guard let layoutObject = self.layoutObject else
-    {
-      return
-    }
-
-    for row in RowsViewRow.allRows()
-    {
-      let cells = rowToCells[row]!
-
-      guard cells.count > 0 else
-      {
-        continue
-      }
-
-      let frames = layoutObject.framesForEquallySizedAndSpacedCells(count: cells.count, inRow: row, hasBottomRow: rowToCells[.bottom]!.count > 0)
-
-      for i in 0..<cells.count
-      {
-        let existingFrame = cells[i].frame
-
-        // Alter cell's frame property only if it actually has a different value.
-        if !NSEqualRects(frames[i], existingFrame)
-        {
-          cells[i].frame = frames[i]
-        }
-      }
-    }
+    applyFrames()
   }
 
   // MARK: - Public Methods
@@ -667,7 +646,15 @@ open class RowsView<ItemType: AnyObject>: NSView
 
     for (coordinate, cell) in zippedCoordinatesAndCellsSortedByAscendingIndex
     {
-      cell.frame = rowsToInsertionFrames[coordinate.row]![uglyMutableIndex]
+      let tempRect = rowsToInsertionFrames[coordinate.row]![uglyMutableIndex]
+
+      cell.frame = tempRect
+
+      if ProcessInfo().isRunningOnYosemite()
+      {
+        // Do it for the second time. LOL!
+        cell.frame = tempRect
+      }
 
       uglyMutableIndex += 1
 
@@ -1128,6 +1115,37 @@ open class RowsView<ItemType: AnyObject>: NSView
     }
   }
 
+  private func applyFrames()
+  {
+    guard let layoutObject = self.layoutObject else
+    {
+      return
+    }
+
+    for row in RowsViewRow.allRows()
+    {
+      let cells = rowToCells[row]!
+
+      guard cells.count > 0 else
+      {
+        continue
+      }
+
+      let frames = layoutObject.framesForEquallySizedAndSpacedCells(count: cells.count, inRow: row, hasBottomRow: rowToCells[.bottom]!.count > 0)
+
+      for i in 0..<cells.count
+      {
+        let existingFrame = cells[i].frame
+
+        // Alter cell's frame property only if it actually has a different value.
+        if !NSEqualRects(frames[i], existingFrame)
+        {
+          cells[i].frame = frames[i]
+        }
+      }
+    }
+  }
+
   // MARK: - Private Methods | Animations
 
   fileprivate static func animationForMovingCellApart(_ currentFrame: NSRect, targetFrame: NSRect) -> CABasicAnimation
@@ -1264,5 +1282,15 @@ extension Array
     }
 
     return elementsToReturn
+  }
+}
+
+extension ProcessInfo
+{
+  open func isRunningOnYosemite() -> Bool
+  {
+    let operatingSystemVersion = self.operatingSystemVersion
+
+    return (operatingSystemVersion.majorVersion == 10) && (operatingSystemVersion.minorVersion == 10)
   }
 }
