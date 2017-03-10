@@ -487,9 +487,9 @@ open class RowsView<ItemType: AnyObject>: NSView
   }
 
   // Вставляет элементы по данным координатам.
+  // Печаль: `coordinates` нельзя сделать множеством, потому что кортежи не могут конформиться к протоколам, в частности, к Hashable.
   open func insertItems(atCoordinates coordinates: [Coordinate], animated: Bool)
   {
-    /*
     // Проверка на уникальность переданных координат.
     var knownCoordinates: [Coordinate] = []
 
@@ -504,7 +504,13 @@ open class RowsView<ItemType: AnyObject>: NSView
         knownCoordinates.append(coordinate)
       }
     }
-    */
+
+    // * * *.
+
+    // Запоминаем фрагменты текущего состояния.
+    let wasEmptyBeforeInsertionsHappened = (rowToItems[.top]!.count == 0) && (rowToItems[.bottom]!.count == 0)
+
+    let hadBottomRowBeforeInsertionsHappened = rowToItems[.bottom]!.count > 0
 
     // * * *.
 
@@ -513,12 +519,12 @@ open class RowsView<ItemType: AnyObject>: NSView
       return dataSource!.itemForRowsView(rowsView: self, atCoordinate: coordinate)
     }
 
-    let wasEmptyBeforeInsertionsHappened = (rowToItems[.top]!.count == 0) && (rowToItems[.bottom]!.count == 0)
-
-    let hadBottomRowBeforeInsertionsHappened = rowToItems[.bottom]!.count > 0
+    let coordinatesZippedWithItemsSortedByAscendingIndices = zip(coordinates, items).sorted { (tupleA, tupleB) -> Bool in
+      return tupleA.0.index < tupleB.0.index
+    }
 
     // Элементы могут быть вставлены либо в верхний, либо в нижний ряд.
-    for (coordinate, item) in zip(coordinates, items)
+    for (coordinate, item) in coordinatesZippedWithItemsSortedByAscendingIndices
     {
       rowToItems[coordinate.row]!.insert(item, at: coordinate.index)
     }
